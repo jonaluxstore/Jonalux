@@ -551,6 +551,9 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
 .fn{display:grid;grid-template-columns:minmax(140px,220px) 1fr auto;gap:12px;align-items:center;font-size:.92rem}
 .fn i{display:block;height:12px;border-radius:999px;background:var(--gold-text);min-width:3px}
 @media (max-width:600px){.fn{grid-template-columns:1fr auto}.fn i{grid-column:1/-1;order:3}}
+
+/* v4 */
+.dev-list .ev{grid-template-columns:minmax(150px,1.4fr) 1fr 1.2fr auto}
 </style>
 <template id="tpl"><header class="top">
   <div class="top-in">
@@ -727,9 +730,16 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
 <section class="view" id="view-custom" hidden>
   <div class="wrap">
     <div class="page-head" id="custom-head">
-      <p class="eyebrow" data-ar="ابدأ طلبك" data-en="Start your order"></p>
-      <h1 data-ar="ابدأ طلبك" data-en="Start your order"></h1>
-      <p data-ar="عبّئ بياناتك واختر الخدمات ✨" data-en="Fill in your details and choose your services ✨"></p>
+      <div id="ch-std">
+        <p class="eyebrow" data-ar="ابدأ طلبك" data-en="Start your order"></p>
+        <h1 data-ar="ابدأ طلبك" data-en="Start your order"></h1>
+        <p data-ar="عبّئ بياناتك واختر الخدمات ✨" data-en="Fill in your details and choose your services ✨"></p>
+      </div>
+      <div id="ch-ready" hidden>
+        <p class="eyebrow" data-ar="أثاث جاهز" data-en="Ready furniture"></p>
+        <h1 data-ar="طلب قطعة جاهزة" data-en="Order a ready piece"></h1>
+        <p data-ar="عبّئ بياناتك واختر ما تريد شراءه ✨" data-en="Fill in your details and choose what you want to buy ✨"></p>
+      </div>
     </div>
 
     <form id="order" novalidate>
@@ -893,6 +903,7 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
       <button type="button" role="tab" data-tab="styles" data-ar="صور الستايلات" data-en="Style photos"></button>
       <button type="button" role="tab" data-tab="prices" data-ar="الأسعار" data-en="Prices"></button>
       <button type="button" role="tab" data-tab="activity" id="tab-activity" hidden data-ar="التفاعلات" data-en="Activity"></button>
+      <button type="button" role="tab" data-tab="contact" id="tab-contact" hidden data-ar="التواصل والروابط" data-en="Contact and links"></button>
     </div>
     <div class="pubbar" id="o-pubbar" hidden>
       <span id="o-pubmsg"></span>
@@ -905,6 +916,7 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
     <div id="o-styles" class="o-pane" hidden></div>
     <div id="o-prices" class="o-pane" hidden></div>
     <div id="o-activity" class="o-pane" hidden></div>
+    <div id="o-contact" class="o-pane" hidden></div>
   </div>
 </section>
 </main>
@@ -915,9 +927,9 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
     <div class="ft-contact">
       <p class="eyebrow" data-ar="تواصل معنا" data-en="Get in touch"></p>
       <ul>
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8.2 18.8z"/><path d="M9.2 8.6c.3 2.6 2.7 5 5.4 5.4l1.1-1.3-2-1-.8.7a4.2 4.2 0 0 1-1.9-1.9l.7-.8-1-2z"/></svg><span data-ar="واتساب" data-en="WhatsApp"></span><a class="ltr" href="https://wa.me/966503347433" target="_blank" rel="noopener">0503347433</a></li>
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6"/></svg><span data-ar="انستقرام" data-en="Instagram"></span><a class="ltr" href="https://www.instagram.com/jonalux_/" target="_blank" rel="noopener">@jonalux_</a></li>
-        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span data-ar="تيك توك" data-en="TikTok"></span><a class="ltr" href="https://www.tiktok.com/@jona.lux_" target="_blank" rel="noopener">@jona.lux_</a></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8.2 18.8z"/><path d="M9.2 8.6c.3 2.6 2.7 5 5.4 5.4l1.1-1.3-2-1-.8.7a4.2 4.2 0 0 1-1.9-1.9l.7-.8-1-2z"/></svg><span data-ar="واتساب" data-en="WhatsApp"></span><a class="ltr" id="ft-wa" href="https://wa.me/966556365275" target="_blank" rel="noopener">+966 55 636 5275</a></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r=".6"/></svg><span data-ar="انستقرام" data-en="Instagram"></span><a class="ltr" id="ft-ig" href="https://www.instagram.com/jonalux_/" target="_blank" rel="noopener">@jonalux_</a></li>
+        <li><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg><span data-ar="تيك توك" data-en="TikTok"></span><a class="ltr" id="ft-tt" href="https://www.tiktok.com/@jona.lux_" target="_blank" rel="noopener">@jona.lux_</a></li>
       </ul>
     </div>
   </div>
@@ -928,7 +940,7 @@ body.cms-on .prod[data-pid]{outline:2px dashed var(--gold-text);outline-offset:2
 <script id="site-data" type="application/json">{"v": 1, "products": [], "styleImages": {}, "prices": {"svc": {}, "pkg": {}, "add": {}}}</script>
 <script id="main-js">document.body.appendChild(document.getElementById('tpl').content.cloneNode(true));
 /* Studio content. Edit here: prices, texts, products. Each text is {ar, en}. */
-const STUDIO = { wa:'966503347433', waShow:'0503347433', email:'oralsulaimani@gmail.com', rush:0.25, ig:'jonalux_', tt:'jona.lux_' };
+const STUDIO = { wa:'966556365275', waShow:'+966 55 636 5275', email:'oralsulaimani@gmail.com', rush:0.25, ig:'jonalux_', tt:'jona.lux_' };
 
 const SERVICES = [
  {id:'concept', price:350,  t:{ar:'لوحة الفكرة',en:'Concept Board'}, d:{ar:'اتجاه التصميم، الإلهام، لوحة الألوان، الخامات والتشطيبات.',en:'Design direction, inspiration, colour palette, materials and finishes.'}},
@@ -1149,15 +1161,18 @@ function applyLang(){
 
 /* ---------- router ---------- */
 let isOwner = false;
-const ROUTES = ['home','about','services','custom','ready','owner','account'];
+const ROUTES = ['home','about','services','custom','ready','readyorder','owner','account'];   // readyorder = the order form opened from a ready piece (lives under the Ready furniture tab)
 let lastRoute = null;
 function route(){
   let r = ROUTES.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'home';
   if(r==='owner' && !isOwner) r = 'home';
   if(r==='account' && !window.JL_FB) r = 'home';
-  if(r!==lastRoute){ if(lastRoute==='custom' && window.JL_cart) window.JL_cart.autoSave(); lastRoute = r; track('page',r); }
-  ROUTES.forEach(x=>{ $('#view-'+x).hidden = x!==r; });
-  $$('#nav a').forEach(a=>{ a.getAttribute('data-route')===r ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'); });
+  if(r==='readyorder' && !readyMode && !(lastOrder?.ready && !$('#result').hidden)) r = 'ready';
+  if(r!==lastRoute){ if((lastRoute==='custom'||lastRoute==='readyorder') && window.JL_cart) window.JL_cart.autoSave(); lastRoute = r; track('page',r); }
+  if(r==='custom' && (readyMode || (lastOrder?.ready && !$('#result').hidden))){ resetForm(); $('#result').hidden = true; $('#order').hidden = false; $('#custom-head').hidden = false; }   // opening Customisation leaves ready-piece mode
+  const view = r==='readyorder' ? 'custom' : r, navR = r==='readyorder' ? 'ready' : r;
+  ROUTES.forEach(x=>{ const v = $('#view-'+x); if(v) v.hidden = x!==view; });
+  $$('#nav a').forEach(a=>{ a.getAttribute('data-route')===navR ? a.setAttribute('aria-current','page') : a.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
 }
 window.addEventListener('hashchange',route);
@@ -1199,6 +1214,18 @@ function renderStatic(){
   $('#mat-list').innerHTML = MATERIALS.map(c=>`<label class="opt"><input type="checkbox" name="mat" value="${c.id}"><span ${T(c.t)}></span></label>`).join('');
 }
 
+/* contact details (owner can change them from the dashboard) */
+const digitsOf = s => String(s||'').replace(/\D/g,'');
+function normPhone(s){ let d = digitsOf(s); if(d.startsWith('00')) d = d.slice(2); if(d.startsWith('0')) d = '966'+d.slice(1); else if(d.length===9 && d.startsWith('5')) d = '966'+d; return d; }
+const showPhone = d => d.length===12 && d.startsWith('966') ? `+966 ${d.slice(3,5)} ${d.slice(5,8)} ${d.slice(8)}` : (d ? '+'+d : '');
+const handleOf = s => String(s||'').trim().replace(/^https?:\/\/(www\.)?(instagram|tiktok)\.com\//i,'').replace(/[/?#].*$/,'').replace(/^@/,'');
+function applyContact(c){
+  if(c){ const d = normPhone(c.wa); if(d){ STUDIO.wa = d; STUDIO.waShow = showPhone(d); } if(handleOf(c.ig)) STUDIO.ig = handleOf(c.ig); if(handleOf(c.tt)) STUDIO.tt = handleOf(c.tt); }
+  const w = $('#ft-wa'), i = $('#ft-ig'), t = $('#ft-tt');
+  if(w){ w.href = 'https://wa.me/'+STUDIO.wa; w.textContent = STUDIO.waShow; }
+  if(i){ i.href = 'https://www.instagram.com/'+STUDIO.ig+'/'; i.textContent = '@'+STUDIO.ig; }
+  if(t){ t.href = 'https://www.tiktok.com/@'+STUDIO.tt; t.textContent = '@'+STUDIO.tt; }
+}
 function waLink(text){ return 'https://wa.me/'+STUDIO.wa+'?text='+encodeURIComponent(text); }
 /* ---------- estimate ---------- */
 const selSvc = () => (readyMode ? $$('#ready-pick input[name=ropt]') : $$('#svc-list input')).filter(b=>b.checked).map(b=>b.value);
@@ -1206,7 +1233,8 @@ const pieces = () => Math.max(1, Math.min(30, parseInt($('#f-pieces').value,10) 
 const qtyOf = id => Math.max(0,Math.min(20,parseInt($('#ao-'+id).value,10)||0));
 function formState(){
   return {sel:selSvc(), pieces:readyMode?1:pieces(), ready:readyMode, urgent:$('input[name=prio]:checked')?.value==='urgent',
-    addons:{xrender:qtyOf('xrender'), xrev:qtyOf('xrev'), xshop:qtyOf('xshop'), source:$('#ao-source').checked}};
+    addons: readyMode ? {xrender:qtyOf('xrender'), xrev:qtyOf('xrev'), xshop:0, source:false}   // a ready piece: no extra shop-drawing detail and no source files
+      : {xrender:qtyOf('xrender'), xrev:qtyOf('xrev'), xshop:qtyOf('xshop'), source:$('#ao-source').checked}};
 }
 function calcEstimate(o){
   const sel = o.sel||[], n = o.pieces||1, lines = []; let design = 0, other = 0, from = false;
@@ -1333,8 +1361,12 @@ function sheetHTML(o){   // call inside withLang()
   const rows = k => f.filter(([l])=>k.includes(l));
   let h = `<div class="blk hd"><img src="${IMG.logo}" alt="JONALUX"><div class="ttl"><h2>${o.ready?tt('طلب قطعة جاهزة','Ready piece order'):tt('طلب تصميم أثاث','Furniture design order')}</h2><small><span class="ltr">${esc(o.ref)}</span> · ${esc(dateStr(o))}</small></div></div>
   <div class="blk"><h4>${tt('بيانات العميل','Client')}</h4>${kv(f.slice(0,3))}</div>
-  <div class="blk"><h4>${tt('الخدمات المطلوبة','Services')}</h4><table>${e.lines.map(x=>`<tr><td>${esc(tx(x.l))}</td><td>${fmt(x.a)} ${unit()}</td></tr>`).join('')}<tr class="tt"><td>${tt('التقدير التقريبي','Estimate')}</td><td>${fmt(e.total)}${e.from?'+':''} ${unit()}</td></tr></table>${o.ready?kv([[tt('القطعة الجاهزة','Ready piece'), tx(o.ready.name)+(o.ready.dims?` · ${o.ready.dims}`:'')]]):''}
+  <div class="blk"><h4>${tt('الخدمات المطلوبة','Services')}</h4><table>${e.lines.map(x=>`<tr><td>${esc(tx(x.l))}</td><td>${fmt(x.a)} ${unit()}</td></tr>`).join('')}<tr class="tt"><td>${tt('التقدير التقريبي','Estimate')}</td><td>${fmt(e.total)}${e.from?'+':''} ${unit()}</td></tr></table>
     <p style="font-size:12px;color:var(--paper-muted);margin-top:4px">${tt('تقدير تقريبي لقطع متوسطة التعقيد، قبل ضريبة القيمة المضافة.','Indicative estimate for medium-complexity pieces, before VAT.')}</p>${kv(f.slice(3,5))}</div>`;
+  if(o.ready){
+    const rp = byId(STATE.products,o.ready.pid), ph = rp?.photos?.[0];
+    h += `<div class="blk"><h4>${tt('القطعة الجاهزة المختارة','Selected ready piece')}</h4><div class="sty">${ph?`<img src="${esc(ph)}" alt="" style="width:190px">`:''}<div><b style="font-size:16px">${esc(tx(o.ready.name))}</b>${o.ready.dims?`<br><span style="color:var(--paper-muted)">${esc(o.ready.dims)}</span>`:''}</div></div></div>`;
+  }
   if(o.cust){
     h += `<div class="blk"><h4>${tt('المساحة والقطعة','Space and piece')}</h4>${kv(f.slice(5,10))}</div>
     <div class="blk"><h4>${tt('الستايل','Style')}</h4><div class="sty">${STATE.styleImages[o.style]?`<img src="${esc(STATE.styleImages[o.style])}" alt="">`:`<div class="tones">${STYLE_TONES[o.style].map(c=>`<i style="background:${c}"></i>`).join('')}</div>`}<div><b style="font-size:16px">${esc(tx(st.t))}</b><br><span style="color:var(--paper-muted)">${esc(tx(st.d))}</span></div></div></div>
@@ -1492,7 +1524,7 @@ function confirmDialog(title,text,yes,no){
 const askCreate = () => confirmDialog(tt('تأكيد إنشاء الطلب','Confirm your order'), tt('هل أنت متأكد من إنشاء الطلب؟','Are you sure you want to create the order?'), tt('نعم، أنشئ الطلب','Yes, create it'), tt('لا','No'));
 
 function openResultView(){
-  if(location.hash!=='#custom') location.hash = '#custom';
+  const hh = lastOrder?.ready ? '#readyorder' : '#custom'; if(location.hash!==hh) location.hash = hh;
   $('#order').hidden = true; $('#custom-head').hidden = true; $('#result').hidden = false; toast(''); window.scrollTo(0,0);
 }
 function finalizeOrder(o){
@@ -1690,16 +1722,21 @@ function startReady(p,sel){
   JL_cart.autoSave(); JL_cart.newForm();
   closeProduct(); resetForm(); setReadyMode(readyInfo(p),sel);
   $('#result').hidden = true; $('#order').hidden = false; $('#custom-head').hidden = false; formDirty = false;
-  location.hash = '#custom'; window.scrollTo(0,0);
+  location.hash = '#readyorder'; window.scrollTo(0,0);
 }
 function setReadyMode(info,sel){
   readyMode = info; $('#std-svc').hidden = true; $('#ready-pick').hidden = false; $('#fs-cust').hidden = true; $$('.cust').forEach(f=>f.hidden = true);
-  $('#g-pieces').hidden = true; $('#addons-h').hidden = true; $('#addons-h-ready').hidden = false;
+  $('#g-pieces').hidden = true; $('#addons-h').hidden = true; $('#addons-h-ready').hidden = false; ready_ui(true);
   renderReadyPick(sel||[]); renumber(); renderSummary();
 }
 function clearReadyMode(){
   readyMode = null; $('#std-svc').hidden = false; $('#ready-pick').hidden = true; $('#fs-cust').hidden = false;
-  $('#g-pieces').hidden = false; $('#addons-h').hidden = false; $('#addons-h-ready').hidden = true; $('#ready-pick').innerHTML = '';
+  $('#g-pieces').hidden = false; $('#addons-h').hidden = false; $('#addons-h-ready').hidden = true; $('#ready-pick').innerHTML = ''; ready_ui(false);
+}
+/* ready piece: ready-piece page heading, and no extra shop-drawing detail / source files add-ons */
+function ready_ui(on){
+  $('#ch-std').hidden = on; $('#ch-ready').hidden = !on;
+  ['xshop','source'].forEach(id=>{ const row = $('#ao-'+id)?.closest('.svc'); if(row) row.hidden = on; });
 }
 function renderReadyPick(sel){
   if(!readyMode) return;
@@ -1746,7 +1783,7 @@ function renderCartModal(){
 }
 function openCart(){ renderCartModal(); $('#cart-modal').hidden = false; track('cart_open'); }
 const closeCart = () => { $('#cart-modal').hidden = true; };
-function showForm(){ $('#result').hidden = true; $('#order').hidden = false; $('#custom-head').hidden = false; location.hash = '#custom'; window.scrollTo(0,0); }
+function showForm(){ $('#result').hidden = true; $('#order').hidden = false; $('#custom-head').hidden = false; location.hash = readyMode ? '#readyorder' : '#custom'; window.scrollTo(0,0); }
 $('#cart-btn').addEventListener('click',openCart);
 $('#cart-x').addEventListener('click',closeCart);
 $('#cart-modal').addEventListener('click',async ev=>{
@@ -1946,6 +1983,8 @@ function subscribeContent(){
     STATE.styleImages = {}; snap.docs.forEach(d=>{ if(d.data().img) STATE.styleImages[d.id] = d.data().img; });
     refreshStyleVisuals(); if(ownerFB) ownerContentChanged();
   }, e=>console.warn('styleImages',e));
+  fdb.doc('settings/contact').onSnapshot(s=>{ applyContact(s.exists ? s.data() : null); applyLang(); }, e=>console.warn('contact',e));
+  fdb.doc('settings/ownerDevices').onSnapshot(s=>{ OWNER_DEV.clear(); (s.exists ? (s.data().ids||[]) : []).forEach(x=>OWNER_DEV.add(x)); window.JL_ownerDevChanged && window.JL_ownerDevChanged(); }, e=>console.warn('ownerDevices',e));
   fdb.doc('settings/content').onSnapshot(s=>{ window.JL_cms.setTexts(s.exists ? (s.data().t||{}) : {}); }, e=>console.warn('content',e));
   fdb.collection('siteImages').onSnapshot(snap=>{ const m = {}; snap.docs.forEach(d=>{ if(d.data().img) m[d.id] = d.data().img; }); window.JL_cms.setImages(m); }, e=>console.warn('siteImages',e));
   fdb.doc('settings/prices').onSnapshot(s=>{
@@ -1957,11 +1996,24 @@ function subscribeContent(){
 
 /* ----- interaction tracking (never recorded for the owner) ----- */
 let sid = ''; try{ sid = sessionStorage.getItem('jl-sid') || ''; if(!sid){ sid = Math.random().toString(36).slice(2,12)+Date.now().toString(36); sessionStorage.setItem('jl-sid',sid); } }catch(e){ sid = Math.random().toString(36).slice(2,12); }
+/* device: a random id kept in this browser (so the same phone coming back is recognised) and a readable label */
+let did = ''; try{ did = localStorage.getItem('jl-did') || ''; if(!did){ did = 'd'+Math.random().toString(36).slice(2,12)+Date.now().toString(36).slice(-4); localStorage.setItem('jl-did',did); } }catch(e){ did = 'd'+Math.random().toString(36).slice(2,12); }
+function deviceLabel(){
+  const ua = navigator.userAgent||'', touch = navigator.maxTouchPoints||0; let os = 'Other';
+  if(/iPhone|iPod/.test(ua)) os = 'iPhone'; else if(/iPad/.test(ua) || (/Macintosh/.test(ua) && touch>1)) os = 'iPad';
+  else if(/Android/.test(ua)) os = /Mobile/.test(ua) ? 'Android phone' : 'Android tablet';
+  else if(/Windows/.test(ua)) os = 'Windows'; else if(/Macintosh|Mac OS X/.test(ua)) os = 'Mac'; else if(/CrOS/.test(ua)) os = 'Chromebook'; else if(/Linux/.test(ua)) os = 'Linux';
+  const br = /EdgA?\//.test(ua)?'Edge' : /OPR\/|Opera/.test(ua)?'Opera' : /SamsungBrowser/.test(ua)?'Samsung' : /(Chrome|CriOS)\//.test(ua)?'Chrome' : /(Firefox|FxiOS)\//.test(ua)?'Firefox' : /Safari\//.test(ua)?'Safari' : '';
+  return br ? `${os} · ${br}` : os;
+}
+const DEV = deviceLabel();
+const isMine = () => { try{ return localStorage.getItem('jl-me')==='1'; }catch(e){ return false; } };   // this browser belongs to the owner: never counted
+const OWNER_DEV = new Set();
 const evQueue = [];
 const EV_TYPES = ['visit','page','lang','order_start','order_submit','whatsapp_order','pdf','copy_summary','product_ask','contact_click','signup','login','product_view','cart_add','cart_remove','cart_open','checkout_start','checkout_confirm','checkout_cancel','form_error','filter_use','session'];
 function sendEvent(e){
-  if(!fdb || ownerFB || !EV_TYPES.includes(e.type)) return;
-  fdb.collection('events').add({t:firebase.firestore.FieldValue.serverTimestamp(), type:e.type, item:String(e.item||'').slice(0,60), sid,
+  if(!fdb || ownerFB || isMine() || !EV_TYPES.includes(e.type)) return;
+  fdb.collection('events').add({t:firebase.firestore.FieldValue.serverTimestamp(), type:e.type, item:String(e.item||'').slice(0,60), sid, did, dev:DEV,
     uid: curUser ? curUser.uid : '', who: curUser ? String(curUser.displayName || (curUser.email||'').split('@')[0] || '').slice(0,40) : '', lang}).catch(()=>{});
 }
 let pagesSeen = 0; const t0 = Date.now(); let lastSession = 0;
@@ -2115,6 +2167,10 @@ function prefillFromAccount(){
   if(!$('#f-name').value) $('#f-name').value = curUser.displayName || '';
   if(!$('#f-email').value) $('#f-email').value = curUser.email || '';
 }
+window.JL_deviceId = () => did; window.JL_ownerDevices = () => OWNER_DEV;
+window.JL_markDevice = async id => {   // exclude a device (this one, or one from the list) from the activity figures
+  if(!fdb || !id) return; try{ const s = await fdb.doc('settings/ownerDevices').get(); const ids = new Set(s.exists ? (s.data().ids||[]) : []); if(ids.has(id)) return; ids.add(id); await fdb.doc('settings/ownerDevices').set({ids:[...ids]}); }catch(e){ console.warn('ownerDevices',e); }
+};
 window.JL_prefill = () => prefillFromAccount();
 window.JL_prefillValues = () => ({name:curUser?.displayName||'', email:curUser?.email||''});
 let cartUnsub = null, cartWatchUid = null;
@@ -2143,6 +2199,7 @@ function initFirebase(){
     if(u && (u.email||'').toLowerCase()===OWNER_EMAIL && !u.emailVerified) setAuthMsg(tt('للدخول إلى لوحتك استخدمي «المتابعة بحساب Google» بنفس البريد.','To open your dashboard, use “Continue with Google” with the same email.'));
     if(!authReady){ authReady = true; flushEvents(); }
     window.JL_cms.setOwner(owner);
+    if(owner){ try{ localStorage.setItem('jl-me','1'); }catch(e){} window.JL_markDevice(did); }
     if(wasReady && !prevUser && u && !owner) track('login');
     if(!u && cartWatchUid) window.JL_cart.reset();
     if((u && !ownerFB ? u.uid : null) !== cartWatchUid) watchCart();
@@ -2178,8 +2235,9 @@ const markDirty = () => {}; const renderPubbar = () => {};
 function showTab(t){
   tab = t;
   $$('#o-tabs button').forEach(b=>b.setAttribute('aria-selected', String(b.dataset.tab===t)));
-  ['orders','products','styles','prices','activity'].forEach(x=>{ $('#o-'+x).hidden = x!==t; });
+  ['orders','products','styles','prices','activity','contact'].forEach(x=>{ $('#o-'+x).hidden = x!==t; });
   if(t==='activity') renderActivity();
+  if(t==='contact') renderContact();
 }
 $('#o-tabs').addEventListener('click',ev=>{ const b = ev.target.closest('button[data-tab]'); if(b) showTab(b.dataset.tab); });
 
@@ -2214,6 +2272,7 @@ function detailHTML(r){
       ${(o.sel||[]).map(id=>{ const s = svcOf(id); return s?`<label class="ck${r.done?.[id]?' on':''}"><input type="checkbox" data-done="${id}"${r.done?.[id]?' checked':''}><span>${esc(tx(s.t))}</span></label>`:''; }).join('') || `<p class="o-note">—</p>`}
       <p class="o-note" style="margin-top:8px">${tt('التقدير','Estimate')}: <b>${fmt(e.total)}${e.from?'+':''} ${unit()}</b></p></div>
     <div><h3>${tt('متطلبات العميل','Client requirements')}</h3><dl class="o-kv">${f.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+      ${o.ready&&byId(draft.products,o.ready.pid)?.photos?.[0]?`<div style="margin-top:12px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line)"><img src="${esc(byId(draft.products,o.ready.pid).photos[0])}" alt="" style="display:block;width:100%"></div>`:''}
       ${colors?`<div class="chips" style="margin-top:10px">${colors}</div>`:''}
       ${o.cust&&o.style?`<div style="margin-top:12px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line)">${styleVisual(o.style)}</div>`:''}</div>
     <label class="f"><span style="font-size:1.1rem;font-family:var(--font-display)">${tt('ملاحظاتي','My notes')}</span><textarea data-act="notes" dir="auto">${esc(r.notes||'')}</textarea></label>
@@ -2412,7 +2471,7 @@ function ownerContentChanged(){
 }
 function ownerEnable(){
   ownerDb = makeOwnerDb(); ownerReady = true; ordersState = 'loading';
-  $('#nav-owner').hidden = false; $('#tab-activity').hidden = false;
+  $('#nav-owner').hidden = false; $('#tab-activity').hidden = false; $('#tab-contact').hidden = false;
   if(!ownerBound){ renderOrdersShell(); bindOrders(); bindProducts(); bindStyles(); bindPrices(); ownerBound = true; } else renderOrdersShell();
   showTab('orders'); renderOwner();
   const t = setTimeout(()=>{ if(ordersState==='loading'){ ordersState = 'error'; renderOrders(); } },12000);
@@ -2423,7 +2482,7 @@ function ownerEnable(){
 function ownerDisable(){
   ownerUnsubs.splice(0).forEach(u=>{ try{ u(); }catch(e){} });
   ownerReady = false; ownerDb = null; orders = new Map(); rawOrders = []; events = [];
-  $('#nav-owner').hidden = true; $('#tab-activity').hidden = true;
+  $('#nav-owner').hidden = true; $('#tab-activity').hidden = true; $('#tab-contact').hidden = true;
 }
 
 /* --- activity of visitors and clients --- */
@@ -2436,10 +2495,39 @@ const EV_LABEL = {visit:['زيارة جديدة','New visit'], page:['تصفح �
 const PAGE_LABEL = {home:['الرئيسية','Home'], about:['من نحن','About us'], services:['الخدمات','Services'], custom:['تخصيص الأثاث','Furniture customisation'], ready:['أثاث جاهز','Ready furniture'], account:['طلباتي','My orders']};
 const FIELD_LABEL = {name:['الاسم','Name'], phone:['رقم الواتساب','WhatsApp number'], email:['البريد الإلكتروني','Email'], services:['اختيار الخدمات','Choosing services'], custom_choice:['نعم/لا للتخصيص','Customise yes/no'], dimensions:['أبعاد المساحة','Space dimensions'], space_type:['نوع المساحة','Type of space'], furniture:['الأثاث المطلوب','Requested furniture'], style:['الستايل','Style']};
 const evMs = e => (e.t && e.t.toMillis) ? e.t.toMillis() : Date.now();
+window.JL_ownerDevChanged = () => { if(typeof tab!=='undefined' && tab==='activity') renderActivity(); };
+document.addEventListener('click',ev=>{ const b = ev.target.closest('[data-mydev]'); if(b) window.JL_markDevice(b.dataset.mydev); });
+
+/* ----- contact details and links ----- */
+function renderContact(){
+  const box = $('#o-contact'); if(!box) return;
+  box.innerHTML = `<p class="o-note" style="margin-bottom:14px">${tt('تغيير هذه البيانات يغيّرها في كل الموقع فوراً: الفوتر، رسالة الواتساب، وملف الـPDF.','Changing these updates the whole site at once: the footer, the WhatsApp message and the PDF.')}</p>
+    <div class="fields" style="max-width:560px">
+      <label class="f"><span>${tt('رقم الواتساب','WhatsApp number')}</span><input type="tel" id="c-wa" dir="ltr" value="${esc(STUDIO.waShow)}" placeholder="+966 5x xxx xxxx"></label>
+      <label class="f"><span>${tt('انستقرام (اسم الحساب أو الرابط)','Instagram (handle or link)')}</span><input type="text" id="c-ig" dir="ltr" value="@${esc(STUDIO.ig)}"></label>
+      <label class="f"><span>${tt('تيك توك (اسم الحساب أو الرابط)','TikTok (handle or link)')}</span><input type="text" id="c-tt" dir="ltr" value="@${esc(STUDIO.tt)}"></label>
+    </div>
+    <div class="o-row" style="margin-top:12px"><button type="button" class="btn" id="c-save">${tt('حفظ','Save')}</button></div>
+    <p class="o-note" id="c-msg" role="status"></p>`;
+}
+$('#o-contact').addEventListener('click',async ev=>{
+  if(ev.target.id!=='c-save') return; const m = $('#c-msg');
+  const wa = normPhone($('#c-wa').value), ig = handleOf($('#c-ig').value), tk = handleOf($('#c-tt').value);
+  if(wa.length<11 || wa.length>14){ m.textContent = tt('رقم الواتساب غير صحيح. اكتبيه مع رمز الدولة، مثل 966556365275.','The WhatsApp number looks wrong. Include the country code, e.g. 966556365275.'); return; }
+  if(!ig || !tk){ m.textContent = tt('اكتبي حساب الانستقرام وتيك توك.','Enter the Instagram and TikTok accounts.'); return; }
+  m.textContent = tt('جاري الحفظ…','Saving…');
+  try{ await fdb.doc('settings/contact').set({wa, ig, tt:tk}); m.textContent = tt('تم الحفظ ✓','Saved ✓'); }catch(e){ console.warn(e); m.textContent = tt('تعذر الحفظ. حاولي مجدداً.','Could not save. Please try again.'); }
+});
+
 function renderActivity(){
   const box = $('#o-activity'); if(!box) return;
   const now = Date.now(), d = new Date(); d.setHours(0,0,0,0); const d0 = d.getTime(), d7 = now - 7*864e5;
-  const ev7 = events.filter(e=>evMs(e)>=d7), cnt = (type,since=d7) => events.filter(e=>e.type===type && evMs(e)>=since).length;
+  const mine = window.JL_ownerDevices(), evs = events.filter(e=>!(e.did && mine.has(e.did)));   // the owner's own devices are never counted
+  const ev7 = evs.filter(e=>evMs(e)>=d7), cnt = (type,since=d7) => evs.filter(e=>e.type===type && evMs(e)>=since).length;
+  /* devices: one browser = one device (same phone coming back is recognised by the id kept in it) */
+  const devs = new Map(); ev7.forEach(e=>{ const k = e.did || ('s:'+e.sid); let x = devs.get(k); if(!x){ x = {k, dev:e.dev||'—', sids:new Set(), pages:0, orders:0, last:0, who:''}; devs.set(k,x); } x.sids.add(e.sid); if(e.type==='page') x.pages++; if(e.type==='order_submit') x.orders++; x.last = Math.max(x.last,evMs(e)); if(e.who) x.who = e.who; if(e.dev) x.dev = e.dev; });
+  const dl = [...devs.values()].sort((a,b)=>b.last-a.last), returning = dl.filter(x=>x.sids.size>1).length;
+  const byKind = {}; dl.forEach(x=>{ const k = String(x.dev).split(' · ')[0]; byKind[k] = (byKind[k]||0)+1; });
   const top = (type,fmtKey) => { const m = {}; ev7.filter(e=>e.type===type).forEach(e=>{ (fmtKey?fmtKey(e):[e.item]).forEach(k=>{ if(k) m[k] = (m[k]||0)+1; }); }); return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,8); };
   const chips = (arr,lab) => arr.length ? `<div class="chips" style="margin-bottom:22px">${arr.map(([k,v])=>`<span class="chip">${esc(lab?lab(k):k)} · ${num(v)}</span>`).join('')}</div>` : `<p class="o-note" style="margin-bottom:22px">—</p>`;
   /* sessions: bounce = visited one page and did nothing else; time = last "session" event per visitor session */
@@ -2449,7 +2537,7 @@ function renderActivity(){
     const ss = list.filter(e=>e.type==='session').map(e=>/dur=(\d+)/.exec(e.item||'')?.[1]).filter(Boolean).map(Number); if(ss.length){ secs += Math.max(...ss); nsec++; } });
   const rate = sids.length ? Math.round(100*bounce/sids.length) : 0, avg = nsec ? Math.round(secs/nsec) : 0;
   const mmss = n => n>=60 ? `${num(Math.floor(n/60))}${tt(' د ',' m ')}${num(n%60)}${tt(' ث',' s')}` : `${num(n)}${tt(' ث',' s')}`;
-  const cards = [[cnt('visit',d0),tt('زيارات اليوم','Visits today')],[cnt('visit'),tt('زيارات آخر ٧ أيام','Visits, last 7 days')],[num(rate)+'٪'.replace('٪',lang==='ar'?'٪':'%'),tt('معدل الارتداد (غادروا فوراً)','Bounce rate (left at once)')],[nsec?mmss(avg):'—',tt('متوسط وقت الجلسة','Average session time')],
+  const cards = [[dl.length,tt('أجهزة مختلفة (٧ أيام)','Different devices (7 days)')],[returning,tt('أجهزة عادت أكثر من مرة','Devices that came back')],[cnt('visit',d0),tt('زيارات اليوم','Visits today')],[cnt('visit'),tt('زيارات آخر ٧ أيام','Visits, last 7 days')],[num(rate)+'٪'.replace('٪',lang==='ar'?'٪':'%'),tt('معدل الارتداد (غادروا فوراً)','Bounce rate (left at once)')],[nsec?mmss(avg):'—',tt('متوسط وقت الجلسة','Average session time')],
     [cnt('product_view'),tt('مشاهدات القطع','Piece views')],[cnt('cart_add'),tt('أضافوا إلى السلة','Added to cart')],[cnt('checkout_start'),tt('بدأوا إنشاء الطلب','Started checkout')],[cnt('order_submit'),tt('أنشأوا ملف طلب','Created an order')],
     [cnt('order_start'),tt('بدأوا تعبئة طلب','Started filling an order')],[cnt('whatsapp_order'),tt('ضغطوا إرسال بالواتساب','Tapped Send on WhatsApp')],[cnt('signup'),tt('حسابات جديدة','New accounts')],[cnt('pdf')+cnt('copy_summary'),tt('PDF ونسخ الملخص','PDFs and copies')]];
   /* where people drop off */
@@ -2461,17 +2549,21 @@ function renderActivity(){
   const pageTop = top('page'), prodTop = top('product_view'), errTop = top('form_error',e=>String(e.item||'').split(','));
   box.innerHTML = `<p class="o-note" style="margin-bottom:14px">${tt('هنا تفاعلات الزوار والعملاء في الموقع. زياراتك أنتِ لا تُحسب. الأرقام من آخر ١٠٠٠ حدث (آخر ٧ أيام).','Here is what visitors and clients do on the site. Your own visits are not counted. Figures come from the last 1,000 events (last 7 days).')}</p>
     <div class="stat-grid">${cards.map(c=>`<div class="stat"><b>${typeof c[0]==='number'?num(c[0]):c[0]}</b><small>${esc(c[1])}</small></div>`).join('')}</div>
+    <h3 style="margin-bottom:8px">${tt('أنواع الأجهزة','Device types')}</h3>${chips(Object.entries(byKind).sort((a,b)=>b[1]-a[1]),k=>k)}
     <h3 style="margin-bottom:8px">${tt('من البداية إلى الطلب','From start to order')}</h3>
     <div class="funnel">${fun.map(([k,v])=>`<div class="fn"><span>${esc(k)}</span><i style="width:${Math.round(100*v/mx)}%"></i><b>${num(v)}</b></div>`).join('')}</div>
     <h3 style="margin:22px 0 8px">${tt('أكثر القطع مشاهدة','Most viewed pieces')}</h3>${chips(prodTop)}
     <h3 style="margin-bottom:8px">${tt('أكثر الصفحات تصفحاً','Most viewed pages')}</h3>${chips(pageTop,k=>(PAGE_LABEL[k]||[k,k])[lang==='ar'?0:1])}
     <h3 style="margin-bottom:8px">${tt('الحقول التي يتعثر فيها العملاء','Fields where clients get stuck')}</h3>${chips(errTop,k=>(FIELD_LABEL[k]||[k,k])[lang==='ar'?0:1])}
-    <h3 style="margin-bottom:8px">${tt('آخر التفاعلات','Latest activity')}</h3>
-    ${events.length?`<div class="ev-list">${events.slice(0,80).map(e=>`<div class="ev"><small>${esc(tm(evMs(e)))}</small><span>${esc(lbl(e))}</span><span>${esc(itemText(e)||'')}</span><small>${e.who?esc(e.who):tt('زائر','Visitor')}</small></div>`).join('')}</div>`:`<p class="o-note">${tt('لا توجد تفاعلات بعد.','No activity yet.')}</p>`}`;
+    <h3 style="margin-bottom:8px">${tt('الأجهزة','Devices')}</h3>
+    <p class="o-note" style="margin-bottom:8px">${tt('الجهاز يُعرَف من المتصفح الذي يستخدمه الزائر. إذا مسح بياناته أو فتح متصفحاً آخر يظهر كجهاز جديد. اضغطي «جهازي» لاستثناء جهاز من الأرقام.','A device is recognised by the browser the visitor uses. If they clear their data or use another browser they appear as a new device. Tap “Mine” to leave a device out of the figures.')}</p>
+    ${dl.length?`<div class="ev-list dev-list">${dl.slice(0,40).map(x=>`<div class="ev"><span>${esc(x.dev)}${x.who?` · ${esc(x.who)}`:''}</span><span>${tt('زيارات','Visits')}: ${num(x.sids.size)}${x.sids.size>1?' ↺':''}</span><span>${tt('صفحات','Pages')}: ${num(x.pages)}${x.orders?` · ${tt('طلبات','Orders')}: ${num(x.orders)}`:''}</span><small>${esc(tm(x.last))}${x.k[0]==='d'?` <button type="button" class="linkbtn" data-mydev="${esc(x.k)}">${tt('جهازي','Mine')}</button>`:''}</small></div>`).join('')}</div>`:`<p class="o-note">—</p>`}
+    <h3 style="margin:22px 0 8px">${tt('آخر التفاعلات','Latest activity')}</h3>
+    ${evs.length?`<div class="ev-list">${evs.slice(0,80).map(e=>`<div class="ev"><small>${esc(tm(evMs(e)))}</small><span>${esc(lbl(e))}</span><span>${esc(itemText(e)||'')}</span><small>${e.who?esc(e.who):tt('زائر','Visitor')}${e.dev?` · ${esc(e.dev)}`:''}</small></div>`).join('')}</div>`:`<p class="o-note">${tt('لا توجد تفاعلات بعد.','No activity yet.')}</p>`}`;
 }
 
 /* ---------- boot (hosted build) ---------- */
 $('#lang-btn').addEventListener('click',()=>{ lang = lang==='ar'?'en':'ar'; try{localStorage.setItem('jl-lang',lang)}catch(e){} applyLang(); track('lang',lang); });
-renderStatic(); applyLang(); route(); initFirebase();
+applyContact(); renderStatic(); applyLang(); route(); initFirebase();
 </script>
 </body></html>
