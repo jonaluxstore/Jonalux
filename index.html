@@ -760,6 +760,34 @@ html[lang="en"] .top-in{max-width:1240px}
 .rp-in{display:grid;grid-template-columns:repeat(3,1fr);gap:10px 12px}
 @media (max-width:600px){.rp-in{grid-template-columns:1fr 1fr}}
 .rp-in label.f span{font-size:.84rem}
+
+/* v7 */
+.svc .qty-in{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:.88rem;color:var(--muted)}
+.svc .qty-in input{width:74px;padding:6px 8px;text-align:center}
+.svc .p .each{display:block;font-size:.72rem;color:var(--muted);font-weight:400}
+.dev-no{font-family:var(--font-body);font-variant-numeric:tabular-nums;letter-spacing:.04em;color:var(--gold-text)}
+.dev-acc{background:rgba(198,165,107,.16);border:1px solid var(--gold-text);border-radius:999px;padding:1px 10px;font-size:.86rem}
+.ct-langs{display:inline-flex;gap:6px}
+.ct-bar .btn[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+/* contract: English copy (left to right) */
+.ct-page.en{direction:ltr;text-align:left;font-family:'Jost','Tajawal',sans-serif}
+.ct-page.en .ct-hd .a{font-family:'Cormorant Garamond','Amiri',serif;font-size:28px;line-height:1.2}
+.ct-page.en .ct-hd .b{font-family:'Amiri',serif;direction:rtl;text-align:left;font-size:15px}
+.ct-page.en .ct-hd2 .a{font-family:'Cormorant Garamond','Amiri',serif;font-size:24px}
+.ct-page.en .ct-h2{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.62em}
+.ct-page.en .ct-h2 i{font-family:'Jost',sans-serif;font-size:.62em}
+.ct-page.en .ct-grid td{padding:.25em 1em .25em 0}
+.ct-page.en .ct-svc .ct-ck{padding:.18em .6em .18em 0}
+.ct-page.en .ct-e.ltr{text-align:left}
+.ct-page.en .ct-tbl th{text-align:left}
+.ct-page.en .ct-own{border-right:0;border-left:6px solid #C6A56B}
+.ct-page.en .ct-cols td:first-child{padding-left:0;border-left:0;padding-right:1.15em;border-right:1px solid #e6dccb}
+.ct-page.en .ct-cols td:last-child{padding-right:0;padding-left:1.15em}
+.ct-page.en .ct-tr h3{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.42em}
+.ct-page.en .ct-tr h3 .n{font-family:'Jost',sans-serif;margin-left:0;margin-right:.55em;font-size:.7em}
+.ct-page.en .ct-sig td:first-child{padding-left:0;padding-right:.85em}
+.ct-page.en .ct-sig td:last-child{padding-right:0;padding-left:.85em}
+.ct-page.en .ct-sig .h{font-family:'Cormorant Garamond','Amiri',serif;font-size:1.35em}
 </style>
 <template id="tpl"><header class="top">
   <div class="top-in">
@@ -844,7 +872,7 @@ html[lang="en"] .top-in{max-width:1240px}
 <div class="modal" id="contract-modal" hidden role="dialog" aria-modal="true" aria-labelledby="ct-h">
   <div class="ct-shell">
     <div class="ct-bar">
-      <b id="ct-h"></b><span class="o-note" id="ct-msg" role="status"></span><span style="flex:1"></span>
+      <b id="ct-h"></b><span class="ct-langs"><button type="button" class="btn ghost" id="ct-ar" aria-pressed="true">العربية</button><button type="button" class="btn ghost" id="ct-en" aria-pressed="false">English</button></span><span class="o-note" id="ct-msg" role="status"></span><span style="flex:1"></span>
       <button type="button" class="btn" id="ct-pdf"></button>
       <button type="button" class="btn ghost" id="ct-print"></button>
       <button type="button" class="btn ghost" id="ct-save"></button>
@@ -1374,7 +1402,10 @@ const READY_OPTS = [
  {id:'r_3d', k:'f3d', t:{ar:'ملف ثري دي',en:'3D file'}, d:{ar:'ملف ثلاثي الأبعاد للقطعة.',en:'The 3D model file of the piece.'}},
  {id:'r_cad', k:'cad', t:{ar:'ملف أوتوكاد',en:'AutoCAD file'}, d:{ar:'ملف أوتوكاد للقطعة.',en:'The AutoCAD file of the piece.'}},
  {id:'r_spec', k:'spec', t:{ar:'مواصفات الأثاث',en:'Furniture specifications'}, d:{ar:'الخامات والتشطيبات والكميات وتفاصيل الاكسسوارات.',en:'Materials, finishes, quantities and hardware details.'}},
- {id:'r_shop', k:'shop', t:{ar:'رسومات تنفيذية (أوتوكاد)',en:'Shop drawings (AutoCAD)'}, d:{ar:'رسومات فنية بالأبعاد والمقاطع وتفاصيل الوصلات وطريقة التركيب.',en:'Technical drawings with dimensions, sections, joinery details and assembly.'}}
+ {id:'r_shop', k:'shop', t:{ar:'رسومات تنفيذية (أوتوكاد)',en:'Shop drawings (AutoCAD)'}, d:{ar:'رسومات فنية بالأبعاد والمقاطع وتفاصيل الوصلات وطريقة التركيب.',en:'Technical drawings with dimensions, sections, joinery details and assembly.'}},
+ /* the two design modifications: priced per piece like the rest (until she sets a price, the add-on price is used), and the client can ask for more than one */
+ {id:'r_xrender', k:'xrender', ad:'xrender', qty:true, t:{ar:'صورة ثلاثية الأبعاد إضافية',en:'Additional 3D render'}, d:{ar:'لقطة إضافية للقطعة من الزاوية التي تختارها.',en:'One more realistic image of the piece from the angle you choose.'}},
+ {id:'r_xrev', k:'xrev', ad:'xrev', qty:true, t:{ar:'تعديل تصميم إضافي',en:'Additional design revision'}, d:{ar:'تعديل على تصميم القطعة حسب طلبك، مثل المقاسات أو الألوان أو التفاصيل.',en:'A change to the design of the piece as you ask, such as sizes, colours or details.'}}
 ];
 const svcOf = id => byId(SERVICES,id) || byId(READY_OPTS,id);
 
@@ -1598,12 +1629,15 @@ function applyContact(c){
 }
 function waLink(text){ return 'https://wa.me/'+STUDIO.wa+'?text='+encodeURIComponent(text); }
 /* ---------- estimate ---------- */
+/* a ready piece: how many of an option the client asked for (only the options that can be ordered more than once) */
+const readyQty = (o,id) => { const op = byId(READY_OPTS,id); return op && op.qty ? Math.max(1,Math.min(20, parseInt(((o.ready||{}).qty||{})[id],10) || 1)) : 1; };
+const svcName = (o,id) => { const x = svcOf(id); if(!x) return ''; const q = o && o.ready ? readyQty(o,id) : 1; return tx(x.t) + (q>1 ? ` × ${q}` : ''); };
 const selSvc = () => (readyMode ? $$('#ready-pick input[name=ropt]') : $$('#svc-list input')).filter(b=>b.checked).map(b=>b.value);
 const pieces = () => Math.max(1, Math.min(30, parseInt($('#f-pieces').value,10) || 1));
 const qtyOf = id => Math.max(0,Math.min(20,parseInt($('#ao-'+id).value,10)||0));
 function formState(){
   return {sel:selSvc(), pieces:readyMode?1:pieces(), ready:readyMode, urgent:$('input[name=prio]:checked')?.value==='urgent',
-    addons: readyMode ? {xrender:qtyOf('xrender'), xrev:qtyOf('xrev'), xshop:0, source:false}   // a ready piece: no extra shop-drawing detail and no source files
+    addons: readyMode ? {xrender:0, xrev:0, xshop:0, source:false}   // a ready piece: the design modifications are among its services (see READY_OPTS)
       : {xrender:qtyOf('xrender'), xrev:qtyOf('xrev'), xshop:qtyOf('xshop'), source:$('#ao-source').checked}};
 }
 function calcEstimate(o){
@@ -1612,7 +1646,7 @@ function calcEstimate(o){
   const times = n>1 ? ` × ${n}` : '';
   if(o.ready){
     const rp = o.ready.prices||{};
-    sel.forEach(id=>{ const op = byId(READY_OPTS,id), pr = rp[id]; if(op && Number.isFinite(pr)){ lines.push({l:op.t, a:pr}); if(id==='r_piece') other += pr; else design += pr; } });
+    sel.forEach(id=>{ const op = byId(READY_OPTS,id), pr = rp[id]; if(op && Number.isFinite(pr)){ const q = readyQty(o,id); lines.push({l: q>1 ? {ar:`${op.t.ar} × ${q}`,en:`${op.t.en} × ${q}`} : op.t, a:pr*q}); if(id==='r_piece') other += pr; else design += pr*q; } });
   } else if(sel.length){
     if(pk){ lines.push({l:{ar:pk.t.ar+times,en:pk.t.en+times}, a:pk.price*n}); design += pk.price*n; }
     else sel.forEach(id=>{ const s = byId(SERVICES,id); if(s){ lines.push({l:{ar:s.t.ar+times,en:s.t.en+times}, a:s.price*n}); design += s.price*n; } });
@@ -1694,7 +1728,7 @@ function readOrder(){
     sel:fs.sel, pieces:fs.pieces, addons:fs.addons, urgent:fs.urgent, prio:fs.urgent?'urgent':'flexible',
     cust: readyMode ? false : chk('cust')==='yes'
   };
-  if(readyMode) o.ready = {pid:readyMode.pid, name:readyMode.name, dims:readyMode.dims||'', prices:readyMode.prices};
+  if(readyMode){ o.ready = {pid:readyMode.pid, name:readyMode.name, dims:readyMode.dims||'', prices:readyMode.prices}; const q = {}; fs.sel.forEach(id=>{ const n = readyQty({ready:readyMode},id); if(n>1) q[id] = n; }); if(Object.keys(q).length) o.ready.qty = q; }
   if($('#f-agree').checked) o.agreed = d.toISOString();   // the client accepted the terms and the intellectual-property clause
   if(o.cust) Object.assign(o,{
     l:$('#f-l').value, w:$('#f-w').value, h:$('#f-h').value, unit:$('#f-unit').value,
@@ -1727,7 +1761,7 @@ function fields(o){
 }
 const stamp = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString(lang==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'}); };
 const dateStr = o => new Date(o.date).toLocaleDateString(lang==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{day:'numeric',month:'long',year:'numeric'});
-const orderServiceNames = o => (o.sel||[]).map(id=>svcOf(id)).filter(Boolean).map(s=>tx(s.t)).join(tt('، ',', '));
+const orderServiceNames = o => (o.sel||[]).map(id=>svcName(o,id)).filter(Boolean).join(tt('، ',', '));
 
 function sheetHTML(o){   // call inside withLang()
   const f = fields(o), kv = a => `<dl class="kv">${a.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>`;
@@ -1927,11 +1961,16 @@ function prefillAccount(){ if(window.JL_prefill) window.JL_prefill(); }
 function loadOrderToForm(o){
   if(!o) return;
   resetForm();
-  if(o.ready && window.JL_shop) window.JL_shop.setReadyMode(o.ready,o.sel);
+  if(o.ready && window.JL_shop){
+    /* an order made before the modifications became services kept them as add-ons: show them as services now */
+    const r = {...o.ready, prices:{...(o.ready.prices||{})}, qty:{...(o.ready.qty||{})}}, sel = [...(o.sel||[])];
+    [['xrender','r_xrender'],['xrev','r_xrev']].forEach(([a,id])=>{ const q = o.addons && o.addons[a]; if(q>0 && !sel.includes(id)){ sel.push(id); r.qty[id] = q; if(!Number.isFinite(r.prices[id])) r.prices[id] = byId(ADDONS,a).price; } });
+    window.JL_shop.setReadyMode(r,sel);
+  }
   $('#f-name').value = o.name||''; $('#f-phone').value = o.phone||''; $('#f-email').value = o.email||'';
   if(!o.ready){ $$('#svc-list input').forEach(b=>b.checked = (o.sel||[]).includes(b.value)); $('#svc-list').dispatchEvent(new Event('change',{bubbles:true})); }
   $('#f-pieces').value = o.pieces||1;
-  ['xrender','xrev','xshop'].forEach(id=>{ $('#ao-'+id).value = o.addons?.[id]||0; }); $('#ao-source').checked = !!o.addons?.source;
+  ['xrender','xrev','xshop'].forEach(id=>{ $('#ao-'+id).value = o.ready ? 0 : (o.addons?.[id]||0); }); $('#ao-source').checked = !o.ready && !!o.addons?.source;
   setRadio('prio', o.urgent?'urgent':'flexible'); $('#f-agree').checked = !!o.agreed;
   if(!o.ready){
     setRadio('cust', o.cust?'yes':'no');
@@ -1957,10 +1996,12 @@ $('#order').addEventListener('input',()=>{ formDirty = true; if(!_orderStarted){
 const cm = () => tt('سم','cm');
 const pName = p => p.name?.[lang] || p.name?.ar || p.name?.en || '';
 const isNum = v => Number.isFinite(v) && v > 0;
+/* the price of one buying option of a piece. A design modification she has not priced for this piece yet uses the add-on price; an emptied field hides the option. */
+function readyOptPrice(p,o){ const v = (p.fprices||{})[o.k]; if(v===undefined && o.ad){ const a = byId(ADDONS,o.ad); return a ? a.price : null; } return v; }
 function readyPrices(p){
   const f = p.fprices || {}, out = {};
   if(isNum(p.price) && (p.avail||'available')==='available') out.r_piece = p.price;
-  READY_OPTS.forEach(o=>{ if(o.k!=='piece' && isNum(f[o.k])) out[o.id] = f[o.k]; });
+  READY_OPTS.forEach(o=>{ if(o.k==='piece') return; const v = readyOptPrice(p,o); if(isNum(v)) out[o.id] = v; });
   return out;
 }
 const readyInfo = p => ({pid:p.id, name:{ar:p.name?.ar||p.name?.en||'', en:p.name?.en||p.name?.ar||''}, dims:dimsText(p), prices:readyPrices(p)});
@@ -2043,7 +2084,8 @@ const pScore = p => STATE.pstats[p.id] || 0;
 function featuredList(){
   const all = STATE.products, f = STATE.featured || {};
   if(f.mode==='manual'){ const l = (f.ids||[]).map(id=>byId(all,id)).filter(Boolean).slice(0,3); if(l.length) return l; }
-  return all.filter(p=>(p.avail||'available')!=='sold').sort((a,b)=>pScore(b)-pScore(a) || (b.ts||0)-(a.ts||0)).slice(0,3);
+  const free = p => (p.avail||'available')!=='sold' ? 1 : 0;   // available pieces come first, then the most interaction
+  return [...all].sort((a,b)=>free(b)-free(a) || pScore(b)-pScore(a) || (b.ts||0)-(a.ts||0)).slice(0,3);
 }
 function renderFeatured(){
   const box = $('#home-featured'); if(!box) return;
@@ -2073,17 +2115,21 @@ let PM = null;   // {pid, sel:Set, img}
 const evPiece = p => (p.id+'|'+(p.name?.ar||p.name?.en||'')).slice(0,60);      // activity log: the piece id, then its name (kept if the piece is deleted later)
 const bump = (pid,n) => { try{ if(window.JL_bump) window.JL_bump(pid,n); }catch(e){} };   // interaction score that picks the home-page pieces
 /* activity log: what went into the cart, packed into one short text (see cartParts in the dashboard) */
-const OPT_CODE = {r_piece:'p', r_render:'r', r_3d:'3', r_cad:'c', r_spec:'s', r_shop:'d'};
+const OPT_CODE = {r_piece:'p', r_render:'r', r_3d:'3', r_cad:'c', r_spec:'s', r_shop:'d', r_xrender:'x', r_xrev:'v'};
 function cartCode(o){
   const a = o.addons||{}, ad = `R${a.xrender||0}V${a.xrev||0}S${a.xshop||0}${a.source?'F':''}`;
   return o.ready ? `r|${o.ready.pid}|${(o.sel||[]).map(id=>OPT_CODE[id]||'').join('')}|${ad}` : `c|${(o.sel||[]).map(id=>SERVICES.findIndex(x=>x.id===id)).filter(i=>i>=0).join('')}|${ad}|${o.pieces||1}`;
 }
 function openProduct(pid){
   const p = byId(STATE.products,pid); if(!p) return;
-  PM = {pid, sel:new Set(), img:0}; renderProduct(); $('#prod-modal').hidden = false; track('product_view', evPiece(p)); bump(pid,1);
+  PM = {pid, sel:new Set(), qty:{}, img:0}; renderProduct(); $('#prod-modal').hidden = false; track('product_view', evPiece(p)); bump(pid,1);
 }
 function closeProduct(){ $('#prod-modal').hidden = true; PM = null; }
-function pmTotal(p){ const pr = readyPrices(p); let t = 0; PM.sel.forEach(id=>{ if(pr[id]) t += pr[id]; }); return t; }
+const pmQty = id => { const o = byId(READY_OPTS,id); return o && o.qty ? Math.max(1,Math.min(20,parseInt(PM.qty[id],10)||1)) : 1; };
+const pmQtyOf = sel => { const q = {}; sel.forEach(id=>{ if(pmQty(id)>1) q[id] = pmQty(id); }); return q; };
+function pmTotal(p){ const pr = readyPrices(p); let t = 0; PM.sel.forEach(id=>{ if(pr[id]) t += pr[id]*pmQty(id); }); return t; }
+/* one row of the "what would you like to buy" list; an option that can be ordered more than once gets a quantity box when it is ticked */
+const optRow = (o,price,on,q,attr,qattr) => `<label class="svc"><input type="checkbox" ${attr}${on?' checked':''}><span class="b"><b>${esc(tx(o.t))}</b><small>${esc(tx(o.d))}</small>${o.qty&&on?`<span class="qty-in">${tt('العدد','How many')} <input type="number" ${qattr} min="1" max="20" step="1" value="${q}" inputmode="numeric" aria-label="${esc(tt('العدد','How many'))}"></span>`:''}</span><span class="p">${money(price)}${o.qty?`<small class="each">${tt('للواحدة','each')}</small>`:''}</span></label>`;
 function renderProduct(){
   if(!PM) return; const p = byId(STATE.products,PM.pid); if(!p){ closeProduct(); return; }
   const av = byId(AVAIL,p.avail||'available')||AVAIL[0], ph = p.photos||[], sp = byId(SPACES,p.space), st = byId(STYLES,p.style), pr = readyPrices(p), sold = av.id==='sold';
@@ -2099,10 +2145,10 @@ function renderProduct(){
       ${dimsHTML(p)}${dots?`<div class="chips" style="margin:8px 0">${dots}</div>`:''}
       ${p.desc?.[lang]?`<p class="desc">${esc(p.desc[lang])}</p>`:''}
       ${sold?`<p class="o-note">${tt('هذه القطعة تم بيعها. يمكنك التواصل معنا لطلب تصميم مشابه.','This piece has been sold. Contact us to request a similar design.')}</p>`
-      : opts.length ? `<h3 style="margin-top:12px">${tt('ماذا تريد أن تشتري؟','What would you like to buy?')}</h3><div class="stack">${opts.map(o=>`<label class="svc"><input type="checkbox" data-pm-opt="${o.id}"${PM.sel.has(o.id)?' checked':''}><span class="b"><b>${esc(tx(o.t))}</b><small>${esc(tx(o.d))}</small></span><span class="p">${money(pr[o.id])}</span></label>`).join('')}</div>
+      : opts.length ? `<h3 style="margin-top:12px">${tt('ماذا تريد أن تشتري؟','What would you like to buy?')}</h3><div class="stack">${opts.map(o=>optRow(o,pr[o.id],PM.sel.has(o.id),pmQty(o.id),`data-pm-opt="${o.id}"`,`data-pm-qty="${o.id}"`)).join('')}</div>
         <div class="tot pm-tot"><span>${tt('المجموع','Total')}</span><b>${fmt(pmTotal(p))} ${unit()}<small>${sarNote(pmTotal(p))}</small></b></div>
         ${cur==='USD'?`<p class="o-note">${tt('الأسعار بالدولار تقريبية (١ دولار = ٣٫٧٥ ريال). الدفع بالريال السعودي.','US dollar prices are approximate (1 USD = 3.75 SAR). Payment is in Saudi Riyals.')}</p>`:''}
-        <p class="o-note">${tt('تقدر تضيف تعديلات على التصميم في الخطوة التالية. السعر النهائي يُؤكد على الواتساب.','You can add design modifications in the next step. The final price is confirmed on WhatsApp.')}</p>
+        <p class="o-note">${tt('السعر النهائي يُؤكد على الواتساب.','The final price is confirmed on WhatsApp.')}</p>
         <div class="o-row"><button type="button" class="btn" data-pm="go"${PM.sel.size?'':' disabled'}>${tt('متابعة إلى الطلب','Continue to order')}</button><button type="button" class="btn ghost" data-pm="cart"${PM.sel.size?'':' disabled'}>${tt('إضافة إلى السلة','Add to cart')}</button></div>`
       : `<p class="o-note">${tt('الأسعار لهذه القطعة عند الطلب. تواصل معنا على الواتساب.','Prices for this piece are on request. Contact us on WhatsApp.')}</p>`}
       ${sold?'':`<a class="btn ghost" target="_blank" rel="noopener" data-pm="ask" href="${waLink(msg)}" style="margin-top:8px">${tt('اسأل على الواتساب','Ask on WhatsApp')}</a>`}
@@ -2117,47 +2163,52 @@ $('#pm-body').addEventListener('click',ev=>{
   const b = ev.target.closest('[data-pm]'); if(!b || !p) return;
   if(b.dataset.pm==='ask'){ track('product_ask', evPiece(p)); bump(p.id,2); return; }
   const sel = [...PM.sel]; if(!sel.length) return;
-  if(b.dataset.pm==='go'){ startReady(p,sel); }
+  if(b.dataset.pm==='go'){ startReady(p,sel,pmQtyOf(sel)); }
   else if(b.dataset.pm==='cart'){
     const d = new Date(), a = window.JL_prefillValues ? window.JL_prefillValues() : {};
     const o = {ref:newRef(d), date:d.toISOString(), name:a.name||'', phone:'', email:a.email||'', sel:sel.sort((x,y)=>READY_OPTS.findIndex(z=>z.id===x)-READY_OPTS.findIndex(z=>z.id===y)), pieces:1, addons:{xrender:0,xrev:0,xshop:0,source:false}, urgent:false, prio:'flexible', cust:false, ready:{pid:p.id, name:readyInfo(p).name, dims:dimsText(p), prices:readyPrices(p)}};
+    const q = pmQtyOf(sel); if(Object.keys(q).length) o.ready.qty = q;
     JL_cart.add(o); $('#pm-msg').textContent = tt('تمت الإضافة إلى السلة ✓','Added to your cart ✓');
   }
 });
 $('#pm-body').addEventListener('change',ev=>{
-  const id = ev.target.dataset.pmOpt; if(!id || !PM) return;
-  ev.target.checked ? PM.sel.add(id) : PM.sel.delete(id); const keepScroll = $('#prod-modal').scrollTop; renderProduct(); $('#prod-modal').scrollTop = keepScroll;
+  if(!PM) return; const qid = ev.target.dataset.pmQty, id = ev.target.dataset.pmOpt; if(!id && !qid) return;
+  if(qid) PM.qty[qid] = Math.max(1,Math.min(20,parseInt(ev.target.value,10)||1));
+  else ev.target.checked ? PM.sel.add(id) : PM.sel.delete(id);
+  const keepScroll = $('#prod-modal').scrollTop; renderProduct(); $('#prod-modal').scrollTop = keepScroll;
 });
 
 /* ================= READY MODE IN THE ORDER FORM ================= */
-function startReady(p,sel){
+function startReady(p,sel,qty){
   JL_cart.autoSave(); JL_cart.newForm();
-  closeProduct(); resetForm(); setReadyMode(readyInfo(p),sel);
+  closeProduct(); resetForm(); setReadyMode({...readyInfo(p), qty:{...(qty||{})}},sel);
   $('#result').hidden = true; $('#order').hidden = false; $('#custom-head').hidden = false; formDirty = false;
   location.hash = '#readyorder'; window.scrollTo(0,0);
 }
 function setReadyMode(info,sel){
-  readyMode = info; $('#std-svc').hidden = true; $('#ready-pick').hidden = false; $('#fs-cust').hidden = true; $$('.cust').forEach(f=>f.hidden = true);
-  $('#g-pieces').hidden = true; $('#addons-h').hidden = true; $('#addons-h-ready').hidden = false; ready_ui(true);
+  readyMode = {...info, qty:{...(info.qty||{})}}; $('#std-svc').hidden = true; $('#ready-pick').hidden = false; $('#fs-cust').hidden = true; $$('.cust').forEach(f=>f.hidden = true);
+  $('#g-pieces').hidden = true; $('#addons-h').hidden = true; $('#addons-h-ready').hidden = true; $('#addon-list').hidden = true; ready_ui(true);
   renderReadyPick(sel||[]); renumber(); renderSummary();
 }
 function clearReadyMode(){
   readyMode = null; $('#std-svc').hidden = false; $('#ready-pick').hidden = true; $('#fs-cust').hidden = false;
-  $('#g-pieces').hidden = false; $('#addons-h').hidden = false; $('#addons-h-ready').hidden = true; $('#ready-pick').innerHTML = ''; ready_ui(false);
+  $('#g-pieces').hidden = false; $('#addons-h').hidden = false; $('#addons-h-ready').hidden = true; $('#addon-list').hidden = false; $('#ready-pick').innerHTML = ''; ready_ui(false);
 }
-/* ready piece: ready-piece page heading, and no extra shop-drawing detail / source files add-ons */
-function ready_ui(on){
-  $('#ch-std').hidden = on; $('#ch-ready').hidden = !on;
-  ['xshop','source'].forEach(id=>{ const row = $('#ao-'+id)?.closest('.svc'); if(row) row.hidden = on; });
-}
+/* ready piece: ready-piece page heading (its add-ons list is hidden: the design modifications are in the services list) */
+function ready_ui(on){ $('#ch-std').hidden = on; $('#ch-ready').hidden = !on; }
 function renderReadyPick(sel){
   if(!readyMode) return;
   const keep = sel || selSvc(), p = byId(STATE.products,readyMode.pid), pr = readyMode.prices;
   $('#ready-pick').innerHTML = `<div class="rp-card">${p?.photos?.[0]?`<img src="${esc(p.photos[0])}" alt="">`:''}<div><b>${esc(tx(readyMode.name))}</b>${readyMode.dims?`<small>${esc(readyMode.dims)}</small>`:''}<a href="#ready" class="linkbtn">${tt('تغيير القطعة','Change piece')}</a></div></div>
     <p class="hint" style="margin:14px 0 12px">${tt('اختر ما تريد شراءه من هذه القطعة.','Choose what you want to buy from this piece.')}</p>
-    <div class="stack">${READY_OPTS.filter(o=>pr[o.id]).map(o=>`<label class="svc"><input type="checkbox" name="ropt" value="${o.id}"${keep.includes(o.id)?' checked':''}><span class="b"><b>${esc(tx(o.t))}</b><small>${esc(tx(o.d))}</small></span><span class="p">${money(pr[o.id])}</span></label>`).join('')}</div>`;
+    <div class="stack">${READY_OPTS.filter(o=>pr[o.id]).map(o=>optRow(o,pr[o.id],keep.includes(o.id),readyQty({ready:readyMode},o.id),`name="ropt" value="${o.id}"`,`name="rqty" data-id="${o.id}"`)).join('')}</div>`;
 }
-$('#ready-pick').addEventListener('change',()=>{ $('#e-svc').classList.remove('on'); renderSummary(); });
+$('#ready-pick').addEventListener('change',ev=>{
+  const t = ev.target; if(!readyMode) return;
+  if(t.name==='rqty'){ readyMode.qty[t.dataset.id] = Math.max(1,Math.min(20,parseInt(t.value,10)||1)); t.value = readyMode.qty[t.dataset.id]; }
+  else if(t.name==='ropt') renderReadyPick();   // show or hide the quantity box of the option
+  $('#e-svc').classList.remove('on'); renderSummary();
+});
 window.JL_shop = {setReadyMode, clearReadyMode, rerender(){ renderReady(); if(PM) renderProduct(); if(readyMode) renderReadyPick(); renderCartBadge(); if(!$('#cart-modal').hidden) renderCartModal(); }};
 
 /* ================= CART ================= */
@@ -2186,7 +2237,7 @@ function renderCartModal(){
   if(!cart.length){ box.innerHTML = `<p class="o-note" style="padding:14px 0">${tt('سلتك فارغة. عندما تبدأ تخصيص أثاث أو تختار قطعة جاهزة وتتركها قبل إنشاء الطلب تُحفظ هنا.','Your cart is empty. Anything you start (a customisation or a ready piece) and leave before creating the order is saved here.')}</p>`; return; }
   box.innerHTML = cart.map(c=>{
     const o = c.o, e = calcEstimate(o), ok = orderComplete(o);
-    const names = (o.sel||[]).map(id=>svcOf(id)).filter(Boolean).map(s=>tx(s.t)).join(tt('، ',', '));
+    const names = (o.sel||[]).map(id=>svcName(o,id)).filter(Boolean).join(tt('، ',', '));
     return `<div class="cart-item" data-cid="${esc(c.id)}"><div class="ci-h"><b>${esc(cartTitle(o))}</b><span class="pill ${o.ready?'s-accepted':'s-new'}">${o.ready?tt('قطعة جاهزة','Ready piece'):tt('تخصيص','Custom')}</span></div>
       <p class="o-note">${esc(names||'—')}</p><p class="ci-t">${tt('التقدير','Estimate')}: <b>${fmt(e.total)}${e.from?'+':''} ${unit()}</b>${sarNote(e.total)}</p>
       ${ok?'':`<p class="o-note ci-miss">${tt('ينقص بعض البيانات. ستكملها عند المتابعة.','Some details are missing. You will complete them when you continue.')}</p>`}
@@ -2639,7 +2690,7 @@ function renderAccount(){
     const title = r.o?.ready ? tx(r.o.ready.name) : (r.o?.cust && r.o.furn ? r.o.furn : tt('طلب تصميم','Design order'));
     return `<div class="o-detail"><div class="o-row" style="justify-content:space-between"><div><b>${esc(title)}</b><br><small class="o-note"><span class="ltr">${esc(r.ref)}</span> · ${tt('أُرسل','Sent')}: ${esc(fdt(r.created))}</small></div><span class="pill s-${st.id}">${esc(tx(st.t))}</span></div>
       ${trackerHTML(r)}${r.reason&&r.status==='rejected'?`<p class="o-note" style="color:var(--err)">${esc(r.reason)}</p>`:''}
-      <div><h3>${tt('الخدمات','Services')} ${sel.length?`<small class="o-note">(${num(n)}/${num(sel.length)} ${tt('منجزة','done')})</small>`:''}</h3>${sel.map(id=>{ const s = svcOf(id); return s?`<label class="ck${r.done?.[id]?' on':''}" style="cursor:default"><input type="checkbox" disabled${r.done?.[id]?' checked':''}><span>${esc(tx(s.t))}</span></label>`:''; }).join('')}</div></div>`; }).join('')}</div>`;
+      <div><h3>${tt('الخدمات','Services')} ${sel.length?`<small class="o-note">(${num(n)}/${num(sel.length)} ${tt('منجزة','done')})</small>`:''}</h3>${sel.map(id=>{ const s = svcOf(id); return s?`<label class="ck${r.done?.[id]?' on':''}" style="cursor:default"><input type="checkbox" disabled${r.done?.[id]?' checked':''}><span>${esc(svcName(r.o||{},id))}</span></label>`:''; }).join('')}</div></div>`; }).join('')}</div>`;
 }
 $('#acct-orders').addEventListener('click',ev=>{ if(ev.target.id==='acct-login') openAuth('in'); });
 function watchMyOrders(){
@@ -2766,7 +2817,7 @@ function detailHTML(r){
     <div><h3>${tt('مراحل الطلب','Order process')}</h3>${PROCESS.map(s=>`<label class="ck${r.steps?.[s.id]?' on':''}"><input type="checkbox" data-step="${s.id}"${r.steps?.[s.id]?' checked':''}><span>${esc(tx(s.t))}</span></label>`).join('')}</div>
     <div><h3>${tt('الخدمات المطلوبة','Requested services')} ${p.total?`<small class="o-note">(${num(p.n)}/${num(p.total)})</small>`:''}</h3>
       ${p.total?`<div class="bar" style="margin-bottom:6px"><i style="width:${p.pct}%"></i></div>`:''}
-      ${(o.sel||[]).map(id=>{ const s = svcOf(id); return s?`<label class="ck${r.done?.[id]?' on':''}"><input type="checkbox" data-done="${id}"${r.done?.[id]?' checked':''}><span>${esc(tx(s.t))}</span></label>`:''; }).join('') || `<p class="o-note">—</p>`}
+      ${(o.sel||[]).map(id=>{ const s = svcOf(id); return s?`<label class="ck${r.done?.[id]?' on':''}"><input type="checkbox" data-done="${id}"${r.done?.[id]?' checked':''}><span>${esc(svcName(o,id))}</span></label>`:''; }).join('') || `<p class="o-note">—</p>`}
       <p class="o-note" style="margin-top:8px">${tt('التقدير','Estimate')}: <b>${fmt(e.total)}${e.from?'+':''} ${unit()}</b></p></div>
     <div><h3>${tt('متطلبات العميل','Client requirements')}</h3><dl class="o-kv">${f.map(([k,v])=>`<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
       ${o.ready&&byId(draft.products,o.ready.pid)?.photos?.[0]?`<div style="margin-top:12px;max-width:220px;border-radius:10px;overflow:hidden;border:1px solid var(--line)"><img src="${esc(byId(draft.products,o.ready.pid).photos[0])}" alt="" style="display:block;width:100%"></div>`:''}
@@ -2874,6 +2925,7 @@ function productForm(){
           <label class="f"><span>${tt('ملف أوتوكاد','AutoCAD file')}</span><input type="number" id="p-cad" min="0" step="1" value="${Number.isFinite(p.fprices?.cad)?p.fprices.cad:''}"></label>
           <label class="f"><span>${tt('مواصفات الأثاث','Furniture specifications')}</span><input type="number" id="p-spec" min="0" step="1" value="${Number.isFinite(p.fprices?.spec)?p.fprices.spec:''}"></label>
           <label class="f"><span>${tt('رسومات تنفيذية (أوتوكاد)','Shop drawings (AutoCAD)')}</span><input type="number" id="p-shop" min="0" step="1" value="${Number.isFinite(p.fprices?.shop)?p.fprices.shop:''}"></label>
+          ${READY_OPTS.filter(o=>o.ad).map(o=>{ const v = readyOptPrice(p,o); return `<label class="f"><span>${esc(tx(o.t))}</span><input type="number" id="p-${o.k}" min="0" step="1" value="${Number.isFinite(v)?v:''}"></label>`; }).join('')}
         </div></div>
     </div>
     <div class="o-row"><button type="button" class="btn" data-p="save">${tt('حفظ القطعة','Save piece')}</button><button type="button" class="btn ghost" data-p="cancel">${tt('إلغاء','Cancel')}</button></div></div>`;
@@ -2885,7 +2937,7 @@ function syncProdForm(){
   editing.desc = {ar:v('p-desc-ar').trim(), en:v('p-desc-en').trim()};
   const nv = id => { const x = v(id); return x==='' ? null : Math.max(0,parseFloat(x)); };
   editing.len = nv('p-len'); editing.wid = nv('p-wid'); editing.hgt = nv('p-hgt'); editing.year = nv('p-year'); delete editing.dims;
-  editing.price = nv('p-price'); editing.fprices = {render:nv('p-render'), f3d:nv('p-f3d'), cad:nv('p-cad'), spec:nv('p-spec'), shop:nv('p-shop')};
+  editing.price = nv('p-price'); editing.fprices = {render:nv('p-render'), f3d:nv('p-f3d'), cad:nv('p-cad'), spec:nv('p-spec'), shop:nv('p-shop'), xrender:nv('p-xrender'), xrev:nv('p-xrev')};
   editing.avail = v('p-avail'); editing.space = v('p-space'); editing.style = v('p-style'); editing.colors = $$('#p-colors input:checked').map(i=>i.value);
 }
 function adjustProdPhoto(i){
@@ -2947,7 +2999,7 @@ function renderPrices(){
     <div class="pr-table">${grp('svc',SERVICES,tt('الخدمات','Services'))}${grp('pkg',PACKAGES,tt('الباقات','Packages'))}${grp('add',ADDONS,tt('الخدمات الإضافية','Additional services'))}</div>
     <h3 style="margin:30px 0 6px">${tt('أسعار الأثاث الجاهز','Ready furniture prices')}</h3>
     <p class="o-note" style="margin-bottom:12px">${tt('لكل قطعة أسعار خيارات «ماذا تريد أن تشتري؟». اتركي الخانة فارغة ليختفي الخيار عن العميل. تُحفظ تلقائياً.','Each piece has the prices of its “What would you like to buy?” options. Leave a field empty to hide that option from the client. Saved automatically.')}</p>
-    ${draft.products.length?`<div class="rp-prices">${draft.products.map(p=>`<div class="rp-p" data-pp="${esc(p.id)}"><b>${esc(p.name[lang]||p.name.ar||p.name.en||'—')}</b><div class="rp-in">${READY_OPTS.map(o=>{ const v = o.k==='piece' ? p.price : (p.fprices||{})[o.k]; return `<label class="f"><span>${esc(tx(o.t))}</span><input type="number" min="0" step="1" data-rk="${o.k}" value="${Number.isFinite(v)?v:''}"></label>`; }).join('')}</div></div>`).join('')}</div>`:`<p class="o-note">${tt('لا توجد قطع بعد. أضيفيها من تبويب «الأثاث الجاهز».','No pieces yet. Add them from the “Ready furniture” tab.')}</p>`}
+    ${draft.products.length?`<div class="rp-prices">${draft.products.map(p=>`<div class="rp-p" data-pp="${esc(p.id)}"><b>${esc(p.name[lang]||p.name.ar||p.name.en||'—')}</b><div class="rp-in">${READY_OPTS.map(o=>{ const v = o.k==='piece' ? p.price : readyOptPrice(p,o); return `<label class="f"><span>${esc(tx(o.t))}</span><input type="number" min="0" step="1" data-rk="${o.k}" value="${Number.isFinite(v)?v:''}"></label>`; }).join('')}</div></div>`).join('')}</div>`:`<p class="o-note">${tt('لا توجد قطع بعد. أضيفيها من تبويب «الأثاث الجاهز».','No pieces yet. Add them from the “Ready furniture” tab.')}</p>`}
     <p class="o-note" id="rp-msg" role="status"></p>`;
 }
 const rpTimers = {};
@@ -3012,13 +3064,13 @@ function ownerEnable(){
   showTab('orders'); renderOwner();
   const t = setTimeout(()=>{ if(ordersState==='loading'){ ordersState = 'error'; renderOrders(); } },12000);
   ownerUnsubs.push(fdb.collection('orders').onSnapshot(snap=>{ clearTimeout(t); ordersState = 'ready'; rawOrders = snap.docs.map(d=>({id:d.id,...d.data()})); rebuildOrders(); }, e=>{ clearTimeout(t); console.warn('orders',e); ordersState = 'error'; renderOrders(); }));
-  ownerUnsubs.push(fdb.collection('ownerNotes').onSnapshot(snap=>{ notesMap = new Map(snap.docs.map(d=>[d.id,d.data()])); devNames = (notesMap.get('_devices')||{}).names || {}; rebuildOrders(); if(tab==='activity' && !renamingDev) renderActivity(); }, e=>console.warn('notes',e)));
+  ownerUnsubs.push(fdb.collection('ownerNotes').onSnapshot(snap=>{ notesMap = new Map(snap.docs.map(d=>[d.id,d.data()])); const dv = notesMap.get('_devices')||{}; devNames = dv.names || {}; devNums = {...(dv.nums||{}), ...devNums}; devLoaded = true; rebuildOrders(); if(tab==='activity' && !renamingDev) renderActivity(); }, e=>console.warn('notes',e)));
   ownerUnsubs.push(fdb.collection('users').onSnapshot(snap=>{ usersList = snap.docs.map(d=>({id:d.id,...d.data()})); if(tab==='activity' && !renamingDev) renderActivity(); }, e=>console.warn('users',e)));
   ownerUnsubs.push(fdb.collection('events').orderBy('t','desc').limit(2000).onSnapshot(snap=>{ events = snap.docs.map(d=>d.data()); if(tab==='activity' && !renamingDev) renderActivity(); }, e=>console.warn('events',e)));
 }
 function ownerDisable(){
   ownerUnsubs.splice(0).forEach(u=>{ try{ u(); }catch(e){} });
-  ownerReady = false; ownerDb = null; orders = new Map(); rawOrders = []; events = []; usersList = []; devNames = {}; notesMap = new Map();
+  ownerReady = false; ownerDb = null; orders = new Map(); rawOrders = []; events = []; usersList = []; devNames = {}; devNums = {}; devLoaded = false; notesMap = new Map();
   if(window.JL_contract) window.JL_contract.close();
   $('#nav-owner').hidden = true; $('#tab-activity').hidden = true; $('#tab-contact').hidden = true;
 }
@@ -3058,16 +3110,10 @@ $('#o-contact').addEventListener('click',async ev=>{
 });
 
 /* ----- activity: devices, visits, pieces, cart, orders, accounts ----- */
-let usersList = [], devNames = {}, renamingDev = null;
+let usersList = [], devNames = {}, devNums = {}, devLoaded = false, renamingDev = null;
 const openDevs = new Set();
-/* every device gets a name of its own (always the same for the same device); the owner can rename it */
-const DEV_WORDS = [['ياسمين','Jasmine'],['لؤلؤ','Pearl'],['عنبر','Amber'],['ريحان','Basil'],['نرجس','Narcissus'],['زمرد','Emerald'],['فيروز','Turquoise'],['عقيق','Agate'],['مرجان','Coral'],['ورد','Rose'],
-  ['خزامى','Lavender'],['زعفران','Saffron'],['قمر','Moon'],['نجمة','Star'],['غيمة','Cloud'],['نسيم','Breeze'],['ندى','Dew'],['سنا','Glow'],['بدر','Full moon'],['ليلك','Lilac'],
-  ['توليب','Tulip'],['أوركيد','Orchid'],['كادي','Kadi'],['عود','Oud'],['مسك','Musk'],['كهرمان','Topaz'],['ياقوت','Ruby'],['ألماس','Diamond'],['صدف','Shell'],['نخلة','Palm'],
-  ['سدرة','Sidra'],['غزال','Gazelle'],['صقر','Falcon'],['مها','Oryx'],['فجر','Dawn'],['شروق','Sunrise'],['غروب','Sunset'],['سماء','Sky'],['واحة','Oasis'],['زنبق','Lily']];
-const hashNum = s => { let h = 2166136261; for(let i=0;i<s.length;i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return h>>>0; };
-const autoDevName = k => { const h = hashNum(String(k)), w = DEV_WORDS[h % DEV_WORDS.length]; return `${tt(w[0],w[1])} ${num(10 + (h>>>9) % 90)}`; };
-const devName = k => devNames[k] || autoDevName(k);
+/* every device gets a number of its own (0001, 0002 …) in the order it first came; the numbers are kept in her private notes so they never change */
+const devNo = k => devNums[k] ? String(devNums[k]).padStart(4,'0') : '—';
 const pageName = k => (PAGE_LABEL[k]||[k,k])[lang==='ar'?0:1];
 const isPid = s => /^p[a-z0-9]{4,}$/.test(s);
 const pieceKey = item => { const s = String(item||''), i = s.indexOf('|'); return i>0 && isPid(s.slice(0,i)) ? s.slice(0,i) : s; };
@@ -3099,7 +3145,7 @@ function evDetail(e){
     default: return it;
   }
 }
-const saveDevNames = n => fdb.doc('ownerNotes/_devices').set({names:n}).catch(e=>console.warn('device names',e));
+const saveDevices = () => fdb.doc('ownerNotes/_devices').set({names:devNames, nums:devNums}).catch(e=>console.warn('devices',e));
 let activityBound = false;
 function bindActivity(){
   if(activityBound) return; activityBound = true; const box = $('#o-activity');
@@ -3108,7 +3154,7 @@ function bindActivity(){
     const b = ev.target.closest('[data-dv]'); if(!b) return; const k = b.dataset.k, a = b.dataset.dv;
     if(a==='rename'){ renamingDev = k; openDevs.add(k); renderActivity(); const i = $('#dev-name-in'); if(i){ i.focus(); i.select(); } }
     else if(a==='cancel'){ renamingDev = null; renderActivity(); }
-    else if(a==='save'){ const v = ($('#dev-name-in')?.value||'').trim().slice(0,40), n = {...devNames}; if(v) n[k] = v; else delete n[k]; devNames = n; renamingDev = null; saveDevNames(n); renderActivity(); }
+    else if(a==='save'){ const v = ($('#dev-name-in')?.value||'').trim().slice(0,40), n = {...devNames}; if(v) n[k] = v; else delete n[k]; devNames = n; renamingDev = null; saveDevices(); renderActivity(); }
   });
   box.addEventListener('keydown',ev=>{ if(ev.target.id==='dev-name-in' && ev.key==='Enter'){ ev.preventDefault(); box.querySelector('[data-dv="save"]')?.click(); } });
 }
@@ -3130,9 +3176,13 @@ function renderActivity(){
   const pathText = s => s.path.filter((t,i,a)=>t!==a[i-1]).join(tt(' ← ',' → ')) || '—';
   /* devices: one browser = one device (the same phone coming back is recognised by the id kept in it) */
   const D = new Map();
-  S.forEach(s=>{ let x = D.get(s.k); if(!x){ x = {k:s.k, ss:[], dev:'—', who:'', evs:[]}; D.set(s.k,x); } x.ss.push(s); });
-  evs.forEach(e=>{ const x = D.get(e.k); if(e.dev) x.dev = e.dev; if(e.who) x.who = e.who; x.evs.push(e); });
+  S.forEach(s=>{ let x = D.get(s.k); if(!x){ x = {k:s.k, ss:[], dev:'—', who:'', uid:'', evs:[]}; D.set(s.k,x); } x.ss.push(s); });
+  evs.forEach(e=>{ const x = D.get(e.k); if(e.dev) x.dev = e.dev; if(e.who) x.who = e.who; if(e.uid) x.uid = e.uid; x.evs.push(e); });
   const devs = [...D.values()].map(x=>{ x.ss.sort((a,b)=>b.first-a.first); x.first = Math.min(...x.ss.map(s=>s.first)); x.last = Math.max(...x.ss.map(s=>s.last)); x.secs = x.ss.reduce((a,s)=>a+secsOf(s),0); return x; }).sort((a,b)=>b.last-a.last);
+  if(devLoaded){   // number the devices that have no number yet, oldest first
+    const fresh = devs.filter(x=>!devNums[x.k]).sort((a,b)=>a.first-b.first);
+    if(fresh.length){ let n = Math.max(0,...Object.values(devNums)); const m = {...devNums}; fresh.forEach(x=>{ m[x.k] = ++n; }); devNums = m; saveDevices(); }
+  }
   const act7 = devs.filter(x=>x.last>=d7), returning = act7.filter(x=>x.ss.length>1).length;
   const s7 = [...S.values()].filter(s=>s.last>=d7), bounced = s7.filter(s=>s.pages<=1 && !s.acts).length, rate = s7.length ? Math.round(100*bounced/s7.length) : 0;
   const days = [...Array(7)].map((_,i)=>{ const a = d0 - i*864e5, b = a + 864e5; return [a, uniq(evs.filter(e=>e.ms>=a && e.ms<b), e=>e.k)]; });
@@ -3158,18 +3208,19 @@ function renderActivity(){
   const lbl = e => { const l = EV_LABEL[e.type]; return l ? tt(l[0],l[1]) : e.type; };
   const devCard = x => {
     const last = x.ss[0], shown = x.evs.filter(e=>e.type!=='session').slice(-10).reverse();
+    const u = x.uid ? acc.get(x.uid) : null, who = u ? (u.name || u.email || x.who) : x.who;   // a signed-in visitor: the account name, or the email when there is no name
     return `<details class="dev" data-dev="${esc(x.k)}"${openDevs.has(x.k)?' open':''}>
-      <summary><b>${esc(devName(x.k))}</b><span class="o-note">${esc(x.dev)}${x.who?` · ${esc(x.who)}`:''}</span><span class="grow"></span><span class="dev-s">${tt('زيارات','Visits')}: ${num(x.ss.length)}${x.ss.length>1?' ↺':''}</span><span class="dev-s">${tt('المدة','Time')}: ${esc(mmss(x.secs))}</span><small>${esc(fdt(x.last))}</small></summary>
+      <summary><b class="ltr dev-no">${devNo(x.k)}</b>${devNames[x.k]?`<b>${esc(devNames[x.k])}</b>`:''}${who?`<span class="dev-acc">${esc(who)}</span>`:''}<span class="o-note">${esc(x.dev)}</span><span class="grow"></span><span class="dev-s">${tt('زيارات','Visits')}: ${num(x.ss.length)}${x.ss.length>1?' ↺':''}</span><span class="dev-s">${tt('المدة','Time')}: ${esc(mmss(x.secs))}</span><small>${esc(fdt(x.last))}</small></summary>
       <div class="dev-b">
-        <dl class="o-kv"><dt>${tt('أول دخول','First seen')}</dt><dd>${esc(fdt(x.first))}</dd><dt>${tt('آخر دخول','Last seen')}</dt><dd>${esc(fdt(x.last))}</dd>
+        <dl class="o-kv">${who?`<dt>${tt('الحساب المسجل','Registered account')}</dt><dd>${esc(who)}${u && u.email && u.email!==who?` · <span class="ltr">${esc(u.email)}</span>`:''}</dd>`:''}<dt>${tt('أول دخول','First seen')}</dt><dd>${esc(fdt(x.first))}</dd><dt>${tt('آخر دخول','Last seen')}</dt><dd>${esc(fdt(x.last))}</dd>
           <dt>${tt('عدد الزيارات','Visits')}</dt><dd>${num(x.ss.length)}</dd><dt>${tt('المدة في الموقع','Time on the site')}</dt><dd>${esc(mmss(x.secs))}${x.ss.length>1?` <small class="o-note">(${tt('آخر زيارة','last visit')}: ${esc(mmss(secsOf(last)))})</small>`:''}</dd></dl>
         <h4>${tt('تتبع الجهاز في الموقع','Where this device went')}</h4>
         <ol class="dev-visits">${x.ss.slice(0,5).map(s=>`<li><small>${esc(fdt(s.first))} — ${tt('المدة','Time')}: ${esc(mmss(secsOf(s)))}</small><span>${esc(pathText(s))}</span></li>`).join('')}</ol>
         ${x.ss.length>5?`<p class="o-note">${tt(`و${num(x.ss.length-5)} زيارات أقدم.`,`and ${x.ss.length-5} older visits.`)}</p>`:''}
         <h4>${tt('آخر التفاعلات','Latest interactions')}</h4>
         ${shown.length?`<div class="ev-list">${shown.map(e=>`<div class="ev ev3"><small>${esc(dayName(e.ms))} · ${esc(tm(e.ms))}</small><span>${esc(lbl(e))}</span><span>${esc(evDetail(e)||'')}</span></div>`).join('')}</div>`:`<p class="o-note">—</p>`}
-        ${renamingDev===x.k?`<div class="o-row"><input type="text" id="dev-name-in" maxlength="40" value="${esc(devNames[x.k]||'')}" placeholder="${esc(autoDevName(x.k))}" style="max-width:240px"><button type="button" class="btn" data-dv="save" data-k="${esc(x.k)}">${tt('حفظ الاسم','Save name')}</button><button type="button" class="btn ghost" data-dv="cancel">${tt('إلغاء','Cancel')}</button></div>`
-          :`<div class="o-row"><button type="button" class="btn ghost" data-dv="rename" data-k="${esc(x.k)}">${tt('تغيير اسم الجهاز','Rename this device')}</button>${x.k[0]==='d'?`<button type="button" class="btn ghost" data-mydev="${esc(x.k)}">${tt('هذا جهازي (لا يُحسب)','This is my device (do not count)')}</button>`:''}</div>`}
+        ${renamingDev===x.k?`<div class="o-row"><input type="text" id="dev-name-in" maxlength="40" value="${esc(devNames[x.k]||'')}" placeholder="${esc(tt('اسم تختارينه لهذا الجهاز','A name you choose for this device'))}" style="max-width:240px"><button type="button" class="btn" data-dv="save" data-k="${esc(x.k)}">${tt('حفظ الاسم','Save name')}</button><button type="button" class="btn ghost" data-dv="cancel">${tt('إلغاء','Cancel')}</button></div>`
+          :`<div class="o-row"><button type="button" class="btn ghost" data-dv="rename" data-k="${esc(x.k)}">${devNames[x.k]?tt('تغيير اسم الجهاز','Rename this device'):tt('إضافة اسم للجهاز','Add a name to this device')}</button>${x.k[0]==='d'?`<button type="button" class="btn ghost" data-mydev="${esc(x.k)}">${tt('هذا جهازي (لا يُحسب)','This is my device (do not count)')}</button>`:''}</div>`}
       </div></details>`;
   };
   box.innerHTML = `<p class="o-note" style="margin-bottom:14px">${tt('تفاعلات الزوار والعملاء في الموقع. زياراتك أنتِ لا تُحسب. الأرقام لآخر ٧ أيام (من آخر ٢٠٠٠ تفاعل).','What visitors and clients do on the site. Your own visits are not counted. Figures are for the last 7 days (from the latest 2,000 interactions).')}</p>
@@ -3183,87 +3234,96 @@ function renderActivity(){
       <section><h3>${tt('الإضافات المختارة في السلة','Add-ons chosen in the cart')}</h3>${bars([...addQty.entries()].sort((a,b)=>b[1]-a[1]))}</section>
     </div>
     <h3 style="margin:26px 0 8px">${tt('الأجهزة التي دخلت الموقع','Devices that visited the site')} <small class="o-note">(${num(devs.length)})</small></h3>
-    <p class="o-note" style="margin-bottom:10px">${tt('لكل جهاز اسم خاص به لتميّزيه، وتقدرين تغيّرينه. اضغطي على الجهاز لترين تاريخ دخوله ومدته وتتبعه وآخر تفاعلاته. الجهاز يُعرَف من المتصفح، فإذا مسح الزائر بياناته أو فتح متصفحاً آخر يظهر كجهاز جديد.','Each device has its own name so you can tell them apart, and you can change it. Tap a device to see when it came, for how long, where it went and its latest interactions. A device is recognised by its browser, so if the visitor clears their data or uses another browser it shows as a new device.')}</p>
+    <p class="o-note" style="margin-bottom:10px">${tt('لكل جهاز رقم ثابت خاص به (مثل 0001)، وإذا كان صاحبه مسجلاً دخوله يظهر اسم حسابه أو بريده. اضغطي على الجهاز لترين تاريخ دخوله ومدته وتتبعه وآخر تفاعلاته. الجهاز يُعرَف من المتصفح، فإذا مسح الزائر بياناته أو فتح متصفحاً آخر يظهر كجهاز جديد.','Each device has its own fixed number (like 0001), and when its visitor is signed in the account name or email is shown. Tap a device to see when it came, for how long, where it went and its latest interactions. A device is recognised by its browser, so if the visitor clears their data or uses another browser it shows as a new device.')}</p>
     ${devs.length?`<div class="dev-list2">${devs.slice(0,40).map(devCard).join('')}</div>${devs.length>40?`<p class="o-note" style="margin-top:8px">${tt(`يظهر أحدث ٤٠ جهازاً من ${num(devs.length)}.`,`Showing the latest 40 of ${devs.length} devices.`)}</p>`:''}`:`<p class="o-note">${tt('لا توجد زيارات بعد.','No visits yet.')}</p>`}
     <details class="dev" style="margin-top:22px"><summary><b>${tt('الحسابات المسجلة','Registered accounts')}</b><span class="o-note">(${num(accs.length)})</span></summary><div class="dev-b">
       <p class="o-note">${tt('الحسابات التي أُنشئت قبل هذا التحديث تظهر هنا بعد أول دخول جديد لصاحبها، أو إذا كان له طلب.','Accounts created before this update appear here after their next sign-in, or if they have an order.')}</p>
       ${accs.length?`<div class="ev-list">${accs.map(u=>`<div class="ev ev3"><span>${esc(u.name||'—')}</span><span class="ltr">${esc(u.email||'')}</span><small>${u.created?`${tt('سُجّل','Registered')}: ${esc(fdate(u.created))}`:''}${u.last?` · ${tt('آخر دخول','Last seen')}: ${esc(fdate(u.last))}`:''}</small></div>`).join('')}</div>`:`<p class="o-note">—</p>`}</div></details>`;
 }
 
-/* ---------- owner only: the 3-page project contract, filled from an order. She can edit any text, tick the boxes, and save it as a PDF. ---------- */
+/* ---------- owner only: the 3-page project contract, filled from an order, in Arabic or English. She can edit any text, tick the boxes, and save it as a PDF. ---------- */
 (function(){
   const AR = n => String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
-  let CT = null, saveTimer = null, beigeLogo = '';
+  let CT = null, saveTimer = null, fitTimer = null, beigeLogo = '';
   const ed = (k,v,cls) => `<span class="ct-e${cls?' '+cls:''}" contenteditable="true" spellcheck="false" data-f="${k}">${esc(v==null?'':v)}</span>`;
   const tx_ = (k,v) => `<span class="ct-t" contenteditable="true" spellcheck="false" data-f="${k}">${esc(v)}</span>`;
   const cb = (k,on,label) => `<span class="ct-ck"><span class="ct-cb${on?' on':''}" data-c="${k}" role="checkbox" tabindex="0" aria-checked="${on?'true':'false'}">${on?'✓':''}</span><span>${label}</span></span>`;
   const markSrc = () => { const m = $('img[data-img="mark"]'); return m ? (m.dataset.oSrc || m.getAttribute('src')) : ''; };
   /* the logo in the beige colour for the purple header (made once from the dark logo) */
   const tint = (src,color) => new Promise(res=>{ const im = new Image(); im.onload = ()=>{ try{ const c = document.createElement('canvas'); c.width = im.naturalWidth; c.height = im.naturalHeight; const g = c.getContext('2d'); g.drawImage(im,0,0); g.globalCompositeOperation = 'source-in'; g.fillStyle = color; g.fillRect(0,0,c.width,c.height); res(c.toDataURL('image/png')); }catch(e){ res(src); } }; im.onerror = ()=>res(src); im.src = src; });
+  /* fields that read the same in both languages: carried over the first time the other language is opened */
+  const SAME = ['ref','no','p1wa','name','phone','email','city','total','dep','rest','days','depdate','sg1n','sg2n','sg1d','sg2d'];
+  const norm = c => !c ? {} : (c.ar || c.en) ? {ar:c.ar||null, en:c.en||null} : c.f ? {ar:c, en:null} : {};   // the first version kept one (Arabic) contract only
 
-  function build(r){
-    return withLang('ar',()=>{
+  function build(r,L){
+    L = L==='en' ? 'en' : 'ar';
+    return withLang(L,()=>{
+      const en = L==='en', N = n => en ? String(n) : AR(n), loc = en ? 'en-GB' : 'ar-SA-u-ca-gregory-nu-latn';
       const o = r.o||{}, e = calcEstimate(o), sel = o.sel||[], has = id => sel.includes(id), src = !!(o.addons && o.addons.source);
       const pk = o.ready ? null : PACKAGES.find(p=>sameSet(p.items,sel));
       const total = e.total, dep = Math.round(total/2), rest = total-dep, n = o.pieces||1;
-      const day = ms => new Date(ms).toLocaleDateString('ar-SA-u-ca-gregory-nu-latn',{day:'numeric',month:'long',year:'numeric'});
+      const day = ms => new Date(ms).toLocaleDateString(loc,{day:'numeric',month:'long',year:'numeric'});
       const rp = o.ready ? byId(STATE.products,o.ready.pid) : null, nm = (arr,id) => { const x = byId(arr,id); return x ? tx(x.t) : ''; };
-      const piece = o.ready ? tx(o.ready.name)+(o.ready.dims?` (${o.ready.dims})`:'') : o.cust ? (o.furn||'')+(n>1?` × ${n}`:'') : 'خدمات تصميم'+(n>1?` لعدد ${n} قطع`:'');
+      const piece = o.ready ? tx(o.ready.name)+(o.ready.dims?` (${o.ready.dims})`:'') : o.cust ? (o.furn||'')+(n>1?` × ${n}`:'') : tt('خدمات تصميم','Design services')+(n>1?tt(` لعدد ${n} قطع`,` for ${n} pieces`):'');
       const spst = (o.cust ? [nm(SPACES,o.space)+(o.space==='other'&&o.spaceOther?` (${o.spaceOther})`:''), nm(STYLES,o.style)] : rp ? [nm(SPACES,rp.space), nm(STYLES,rp.style)] : []).filter(Boolean).join(' · ');
       const det = [];
-      ADDONS.forEach(a=>{ const v = o.addons && o.addons[a.id]; if(a.qty ? v>0 : v) det.push(a.qty ? `${a.t.ar} × ${v}` : a.t.ar); });
-      if(o.urgent) det.push('تسليم مستعجل (+٢٥٪)');
+      if(o.ready) sel.forEach(id=>{ const op = byId(READY_OPTS,id); if(op && op.qty) det.push(svcName(o,id)); });
+      ADDONS.forEach(a=>{ const v = o.addons && o.addons[a.id]; if(a.qty ? v>0 : v) det.push(a.qty ? `${tx(a.t)} × ${v}` : tx(a.t)); });
+      if(o.urgent) det.push(tt('تسليم مستعجل (+٢٥٪)','Expedited delivery (+25%)'));
       if(o.cust){
-        det.push(`أبعاد المساحة: ${o.l} × ${o.w} × ${o.h} ${o.unit==='m'?'م':'سم'}`);
-        if((o.colors||[]).length || o.colorOther) det.push('الألوان: '+list(o.colors,COLORS,o.colorOther));
-        if((o.mats||[]).length || o.matOther) det.push('الخامات: '+list(o.mats,MATERIALS,o.matOther));
-        if(o.usage) det.push('الاستخدام: '+nm(USAGES,o.usage));
-        if(o.budget) det.push(`الميزانية: ${fmtN(o.budget)} ريال`);
-        if(o.notes) det.push('ملاحظات العميل: '+o.notes);
+        det.push(`${tt('أبعاد المساحة','Space dimensions')}: ${o.l} × ${o.w} × ${o.h} ${o.unit==='m'?tt('م','m'):tt('سم','cm')}`);
+        if((o.colors||[]).length || o.colorOther) det.push(tt('الألوان: ','Colours: ')+list(o.colors,COLORS,o.colorOther));
+        if((o.mats||[]).length || o.matOther) det.push(tt('الخامات: ','Materials: ')+list(o.mats,MATERIALS,o.matOther));
+        if(o.usage) det.push(tt('الاستخدام: ','Usage: ')+nm(USAGES,o.usage));
+        if(o.budget) det.push(`${tt('الميزانية','Budget')}: ${fmtN(o.budget)} ${tt('ريال','SAR')}`);
+        if(o.notes) det.push(tt('ملاحظات العميل: ','Client notes: ')+o.notes);
       }
-      const lines = e.lines.map(x=>`${x.l.ar}: ${fmtN(x.a)}`).join(' · ');
-      const foot = (i,t) => `<div class="ct-ft"><span>jonaluxstore.github.io/Jonalux · WhatsApp ${esc(STUDIO.waShow)}</span><span>${t} · ${AR(i)} / ٣</span></div>`;
+      const lines = e.lines.map(x=>`${tx(x.l)}: ${fmtN(x.a)}`).join(' · ');
+      const foot = (i,t) => `<div class="ct-ft"><span>jonaluxstore.github.io/Jonalux · WhatsApp ${esc(STUDIO.waShow)}</span><span>${t} · ${N(i)} / ${N(3)}</span></div>`;
       const wm = markSrc() ? `<img class="ct-wm" src="${markSrc()}" alt="">` : '';
       const h2 = (i,t) => `<h2 class="ct-h2"><i>${i}</i><span>${t}</span></h2>`;
-      const svc = [['concept','لوحة الفكرة',has('concept')],['design','تصميم الأثاث المخصص',has('design')],['render',o.ready?'لقطات ثري دي':'التصور ثلاثي الأبعاد',has('render')||has('r_render')],['spec','جدول المواصفات',has('spec')||has('r_spec')],
-        ['shop','الرسومات التنفيذية',has('shop')||has('r_shop')],['dwg','ملف أوتوكاد (DWG)',has('r_cad')||src],['f3d','ملف ثري دي',has('r_3d')||src]];
-      const p1 = `<div class="ct-page">${wm}
-        <div class="ct-hd"><img src="${beigeLogo||IMG.logo}" alt="JONALUX"><div class="r"><div class="a">${tx_('title','عقد تقديم خدمات تصميم أثاث')}</div><div class="b">Furniture Design Services Agreement</div></div></div><div class="ct-body">
-        <div class="ct-meta"><div>رقم الطلب: ${ed('ref',r.ref,'ltr')}</div><div>رقم العقد: ${ed('no','C-'+String(r.ref||'').replace(/^JL-/,''),'ltr')}</div><div>التاريخ: ${ed('date',day(Date.now()))}</div></div>
-        ${h2('١','أطراف العقد')}
-        <div class="ct-card"><table class="ct-grid"><tr><td><b>الطرف الأول:</b> ${ed('p1','جونا•لوكس لتصميم الأثاث')}</td><td>واتساب: ${ed('p1wa',STUDIO.waShow,'ltr')}</td></tr>
-          <tr><td><b>الطرف الثاني (العميل):</b> ${ed('name',o.name)}</td><td>رقم الجوال: ${ed('phone',o.phone,'ltr')}</td></tr>
-          <tr><td>المدينة: ${ed('city','')}</td><td>البريد الإلكتروني: ${ed('email',o.email||r.email||'','ltr')}</td></tr></table></div>
-        ${h2('٢','نطاق العمل')}
-        <div class="ct-card"><div class="ct-row">القطعة / القطع: ${ed('piece',piece,'grow')}</div>
-          <div class="ct-row">نوع المساحة والستايل: ${ed('space',spst,'grow')}</div>
-          <div class="ct-lbl">الخدمات المتفق عليها:</div>
-          <div class="ct-svc">${svc.map(([k,t,on])=>cb('s_'+k,on,t)).join('')}${cb('s_ready',has('r_piece'),'قطعة جاهزة: '+ed('readyname',has('r_piece')?tx(o.ready.name):''))}${cb('s_pkg',!!pk,'باقة: '+ed('pkgname',pk?tx(pk.t):''))}</div>
-          <div class="ct-lbl">تفاصيل إضافية:</div>${ed('details',det.join(' · '),'blk')}</div>
-        ${h2('٣','القيمة والدفع والمدة')}
-        <table class="ct-tbl"><tr><th style="width:42%">البند</th><th>التفاصيل</th></tr>
-          <tr><td>تفصيل القيمة (ريال سعودي)</td><td>${ed('lines',lines,'blk')}</td></tr>
-          <tr><td>القيمة الإجمالية</td><td>${ed('total',fmtN(total),'ltr')} ريال سعودي</td></tr>
-          <tr><td>الدفعة المقدّمة ٥٠٪ (قبل بدء العمل)</td><td>${ed('dep',fmtN(dep),'ltr')} ريال · تاريخ التحويل ${ed('depdate','')}</td></tr>
-          <tr><td>الدفعة المتبقية ٥٠٪ (قبل تسليم الملفات النهائية)</td><td>${ed('rest',fmtN(rest),'ltr')} ريال</td></tr>
-          <tr><td>مدة التنفيذ</td><td>${ed('days','')} يوم عمل من استلام الدفعة المقدّمة</td></tr>
-          <tr><td>جولات التعديل المشمولة</td><td>${ed('rounds','جولتان')}</td></tr>
-          <tr><td>صيغة التسليم</td><td class="ct-fmt">${cb('d_pdf',true,'PDF')}${cb('d_dwg',has('r_cad')||src,'DWG')}${cb('d_3d',has('r_3d')||src,'ثري دي')}${cb('d_other',false,'أخرى '+ed('dother',''))}</td></tr></table>
-        <div class="ct-own"><b>الملكية الفكرية:</b> ${tx_('own','يبقى التصميم ملكاً لجونا•لوكس، ولا تنتقل ملكيته وحق تصنيعه إلى العميل إلا بعد سداد كامل القيمة، بما في ذلك قيمة ملف الأوتوكاد وملف الثري دي. ويقرّ العميل بأنه اطّلع على الشروط والأحكام المرفقة ووافق عليها، وخاصة بندي الإلغاء والملكية الفكرية.')}
-          ${o.agreed?`<div class="ct-agr">${tx_('agreed','وافق العميل على الشروط والأحكام إلكترونياً عند إرسال الطلب من الموقع بتاريخ '+new Date(o.agreed).toLocaleString('ar-SA-u-ca-gregory-nu-latn',{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'})+'.')}</div>`:''}</div>
-        </div>${foot(1,'عقد تقديم خدمات')}</div>`;
+      const page = `<div class="ct-page${en?' en':''}" dir="${en?'ltr':'rtl'}" lang="${L}">`;
+      const svc = [['concept',tt('لوحة الفكرة','Concept board'),has('concept')],['design',tt('تصميم الأثاث المخصص','Custom furniture design'),has('design')],
+        ['render',o.ready?tt('لقطات ثري دي','3D renders'):tt('التصور ثلاثي الأبعاد','3D visualisation'),has('render')||has('r_render')],['spec',tt('جدول المواصفات','Specification schedule'),has('spec')||has('r_spec')],
+        ['shop',tt('الرسومات التنفيذية','Shop drawings'),has('shop')||has('r_shop')],['dwg',tt('ملف أوتوكاد (DWG)','AutoCAD file (DWG)'),has('r_cad')||src],['f3d',tt('ملف ثري دي','3D file'),has('r_3d')||src]];
+      const sar = tt('ريال سعودي','SAR'), sr = tt('ريال','SAR');
+      const p1 = `${page}${wm}
+        <div class="ct-hd"><img src="${beigeLogo||IMG.logo}" alt="JONALUX"><div class="r"><div class="a">${tx_('title',tt('عقد تقديم خدمات تصميم أثاث','Furniture Design Services Agreement'))}</div><div class="b">${en?'عقد تقديم خدمات تصميم أثاث':'Furniture Design Services Agreement'}</div></div></div><div class="ct-body">
+        <div class="ct-meta"><div>${tt('رقم الطلب','Order no.')}: ${ed('ref',r.ref,'ltr')}</div><div>${tt('رقم العقد','Contract no.')}: ${ed('no','C-'+String(r.ref||'').replace(/^JL-/,''),'ltr')}</div><div>${tt('التاريخ','Date')}: ${ed('date',day(Date.now()))}</div></div>
+        ${h2(N(1),tt('أطراف العقد','Parties'))}
+        <div class="ct-card"><table class="ct-grid"><tr><td><b>${tt('الطرف الأول:','First party:')}</b> ${ed('p1',tt('جونا•لوكس لتصميم الأثاث','Jona·Lux Furniture Design'))}</td><td>${tt('واتساب','WhatsApp')}: ${ed('p1wa',STUDIO.waShow,'ltr')}</td></tr>
+          <tr><td><b>${tt('الطرف الثاني (العميل):','Second party (client):')}</b> ${ed('name',o.name)}</td><td>${tt('رقم الجوال','Mobile')}: ${ed('phone',o.phone,'ltr')}</td></tr>
+          <tr><td>${tt('المدينة','City')}: ${ed('city','')}</td><td>${tt('البريد الإلكتروني','Email')}: ${ed('email',o.email||r.email||'','ltr')}</td></tr></table></div>
+        ${h2(N(2),tt('نطاق العمل','Scope of work'))}
+        <div class="ct-card"><div class="ct-row">${tt('القطعة / القطع','Piece / pieces')}: ${ed('piece',piece,'grow')}</div>
+          <div class="ct-row">${tt('نوع المساحة والستايل','Space type and style')}: ${ed('space',spst,'grow')}</div>
+          <div class="ct-lbl">${tt('الخدمات المتفق عليها:','Agreed services:')}</div>
+          <div class="ct-svc">${svc.map(([k,t,on])=>cb('s_'+k,on,t)).join('')}${cb('s_ready',has('r_piece'),tt('قطعة جاهزة: ','Ready piece: ')+ed('readyname',has('r_piece')&&o.ready?tx(o.ready.name):''))}${cb('s_pkg',!!pk,tt('باقة: ','Package: ')+ed('pkgname',pk?tx(pk.t):''))}</div>
+          <div class="ct-lbl">${tt('تفاصيل إضافية:','Additional details:')}</div>${ed('details',det.join(' · '),'blk')}</div>
+        ${h2(N(3),tt('القيمة والدفع والمدة','Value, payment and timeline'))}
+        <table class="ct-tbl"><tr><th style="width:42%">${tt('البند','Item')}</th><th>${tt('التفاصيل','Details')}</th></tr>
+          <tr><td>${tt('تفصيل القيمة (ريال سعودي)','Price breakdown (SAR)')}</td><td>${ed('lines',lines,'blk')}</td></tr>
+          <tr><td>${tt('القيمة الإجمالية','Total value')}</td><td>${ed('total',fmtN(total),'ltr')} ${sar}</td></tr>
+          <tr><td>${tt('الدفعة المقدّمة ٥٠٪ (قبل بدء العمل)','Advance payment 50% (before work starts)')}</td><td>${ed('dep',fmtN(dep),'ltr')} ${sr} · ${tt('تاريخ التحويل','transfer date')} ${ed('depdate','')}</td></tr>
+          <tr><td>${tt('الدفعة المتبقية ٥٠٪ (قبل تسليم الملفات النهائية)','Remaining payment 50% (before the final files are delivered)')}</td><td>${ed('rest',fmtN(rest),'ltr')} ${sr}</td></tr>
+          <tr><td>${tt('مدة التنفيذ','Timeline')}</td><td>${ed('days','')} ${tt('يوم عمل من استلام الدفعة المقدّمة','working days from receipt of the advance payment')}</td></tr>
+          <tr><td>${tt('جولات التعديل المشمولة','Revision rounds included')}</td><td>${ed('rounds',tt('جولتان','Two rounds'))}</td></tr>
+          <tr><td>${tt('صيغة التسليم','Delivery format')}</td><td class="ct-fmt">${cb('d_pdf',true,'PDF')}${cb('d_dwg',has('r_cad')||src,'DWG')}${cb('d_3d',has('r_3d')||src,tt('ثري دي','3D'))}${cb('d_other',false,tt('أخرى ','Other ')+ed('dother',''))}</td></tr></table>
+        <div class="ct-own"><b>${tt('الملكية الفكرية:','Intellectual property:')}</b> ${tx_('own',tt('يبقى التصميم ملكاً لجونا•لوكس، ولا تنتقل ملكيته وحق تصنيعه إلى العميل إلا بعد سداد كامل القيمة، بما في ذلك قيمة ملف الأوتوكاد وملف الثري دي. ويقرّ العميل بأنه اطّلع على الشروط والأحكام المرفقة ووافق عليها، وخاصة بندي الإلغاء والملكية الفكرية.','The design remains the property of Jona·Lux. Ownership and the right to manufacture pass to the client only after the full value is paid, including the AutoCAD file and the 3D file. The client confirms having read and accepted the attached terms and conditions, in particular the cancellation and intellectual property clauses.'))}
+          ${o.agreed?`<div class="ct-agr">${tx_('agreed',tt('وافق العميل على الشروط والأحكام إلكترونياً عند إرسال الطلب من الموقع بتاريخ ','The client accepted the terms and conditions electronically when sending the order from the website on ')+new Date(o.agreed).toLocaleString(loc,{weekday:'long',day:'numeric',month:'long',year:'numeric',hour:'numeric',minute:'2-digit'})+'.')}</div>`:''}</div>
+        </div>${foot(1,tt('عقد تقديم خدمات','Design services agreement'))}</div>`;
       /* pages 2 and 3: the terms, in two columns each */
-      const sec = i => { const s = LEGAL_TERMS[i]; return `<div class="ct-tr"><h3><span class="n">${AR(i+1)}.</span>${tx_('th'+i,s.h.ar)}</h3><ol>${s.items.map((t,j)=>`<li><span class="n">${AR(i+1)}.${AR(j+1)}</span>${tx_('t'+i+'.'+j,t.ar)}</li>`).join('')}</ol></div>`; };
-      const cols = ids => { const w = i => 60 + LEGAL_TERMS[i].items.reduce((a,t)=>a+t.ar.length+30,0), all = ids.reduce((a,i)=>a+w(i),0); let acc = 0; const A = [], B = [];
-        ids.forEach(i=>{ if(acc + w(i)/2 <= all/2 || !A.length){ A.push(i); acc += w(i); } else B.push(i); }); return `<table class="ct-cols"><tr><td>${A.map(sec).join('')}</td><td>${B.map(sec).join('')}</td></tr></table>`; };
+      const sec = i => { const s = LEGAL_TERMS[i]; return `<div class="ct-tr"><h3><span class="n">${N(i+1)}.</span>${tx_('th'+i,tx(s.h))}</h3><ol>${s.items.map((t,j)=>`<li><span class="n">${N(i+1)}.${N(j+1)}</span>${tx_('t'+i+'.'+j,tx(t))}</li>`).join('')}</ol></div>`; };
+      const cols = ids => { const w = i => 60 + LEGAL_TERMS[i].items.reduce((a,t)=>a+tx(t).length+30,0), all = ids.reduce((a,i)=>a+w(i),0); let acc = 0; const A = [], B = [];
+        ids.forEach(i=>{ if(!B.length && (acc + w(i)/2 <= all/2 || !A.length)){ A.push(i); acc += w(i); } else B.push(i); }); return `<table class="ct-cols"><tr><td>${A.map(sec).join('')}</td><td>${B.map(sec).join('')}</td></tr></table>`; };
       const half = Math.min(7, LEGAL_TERMS.length), ids = LEGAL_TERMS.map((_,i)=>i);
-      const sig = `${h2('✓','الإقرار والتوقيع')}<div class="ct-own" style="margin-top:0">${tx_('ack','يقرّ الطرفان بصحة البيانات الواردة في هذا العقد، ويقرّ العميل بأنه قرأ الشروط والأحكام ووافق عليها، وأن ملكية التصميم لا تنتقل إليه إلا بعد سداد كامل القيمة بما في ذلك قيمة ملف الأوتوكاد وملف الثري دي.')}</div>
-        <table class="ct-sig"><tr><td><div class="ct-card"><div class="h">الطرف الأول · جونا•لوكس</div><div class="ct-row">الاسم: ${ed('sg1n','','grow')}</div><div class="ct-row s">التوقيع: ${ed('sg1s','','grow')}</div><div class="ct-row">التاريخ: ${ed('sg1d','','grow')}</div></div></td>
-          <td><div class="ct-card"><div class="h">الطرف الثاني · العميل</div><div class="ct-row">الاسم: ${ed('sg2n',o.name,'grow')}</div><div class="ct-row s">التوقيع: ${ed('sg2s','','grow')}</div><div class="ct-row">التاريخ: ${ed('sg2d','','grow')}</div></div></td></tr></table>
-        <div class="ct-wa">${tx_('signnote','يوقّع العميل على هذه الصفحة إلكترونياً من جواله أو بعد طباعتها، ويعيد إرسال الملف الموقّع عبر الواتساب. لا يبدأ العمل إلا بعد استلام العقد موقّعاً وتحويل الدفعة المقدّمة.')}</div>`;
-      const tp = (list,i) => `<div class="ct-page">${wm}<div class="ct-hd2"><div class="a">الشروط والأحكام${i===2?'':' (تابع)'}</div><img src="${IMG.logo}" alt="JONALUX"></div><div class="ct-body">
-        ${i===2?`<p class="ct-intro">${tx_('intro','تُعدّ هذه الشروط جزءاً لا يتجزأ من عقد تقديم خدمات التصميم، وتسري على كل طلب يُرسَل عبر موقع جونا•لوكس.')}</p>`:''}
-        ${cols(list)}${i===3?sig:''}</div>${foot(i,'الشروط والأحكام')}</div>`;
+      const sigBox = (k,title,name) => `<td><div class="ct-card"><div class="h">${title}</div><div class="ct-row">${tt('الاسم','Name')}: ${ed(k+'n',name,'grow')}</div><div class="ct-row s">${tt('التوقيع','Signature')}: ${ed(k+'s','','grow')}</div><div class="ct-row">${tt('التاريخ','Date')}: ${ed(k+'d','','grow')}</div></div></td>`;
+      const sig = `${h2('✓',tt('الإقرار والتوقيع','Acknowledgement and signature'))}<div class="ct-own" style="margin-top:0">${tx_('ack',tt('يقرّ الطرفان بصحة البيانات الواردة في هذا العقد، ويقرّ العميل بأنه قرأ الشروط والأحكام ووافق عليها، وأن ملكية التصميم لا تنتقل إليه إلا بعد سداد كامل القيمة بما في ذلك قيمة ملف الأوتوكاد وملف الثري دي.','Both parties confirm that the details in this agreement are correct. The client confirms having read and accepted the terms and conditions, and that ownership of the design passes to the client only after the full value is paid, including the AutoCAD file and the 3D file.'))}</div>
+        <table class="ct-sig"><tr>${sigBox('sg1',tt('الطرف الأول · جونا•لوكس','First party · Jona·Lux'),'')}${sigBox('sg2',tt('الطرف الثاني · العميل','Second party · Client'),o.name)}</tr></table>
+        <div class="ct-wa">${tx_('signnote',tt('يوقّع العميل على هذه الصفحة إلكترونياً من جواله أو بعد طباعتها، ويعيد إرسال الملف الموقّع عبر الواتساب. لا يبدأ العمل إلا بعد استلام العقد موقّعاً وتحويل الدفعة المقدّمة.','The client signs this page electronically on their phone or after printing it, and sends the signed file back on WhatsApp. Work starts only after the signed agreement and the advance payment are received.'))}</div>`;
+      const tp = (lst,i) => `${page}${wm}<div class="ct-hd2"><div class="a">${tt('الشروط والأحكام','Terms and conditions')}${i===2?'':tt(' (تابع)',' (continued)')}</div><img src="${IMG.logo}" alt="JONALUX"></div><div class="ct-body">
+        ${i===2?`<p class="ct-intro">${tx_('intro',tt('تُعدّ هذه الشروط جزءاً لا يتجزأ من عقد تقديم خدمات التصميم، وتسري على كل طلب يُرسَل عبر موقع جونا•لوكس.','These terms are an integral part of the design services agreement and apply to every order sent through the Jona·Lux website.'))}</p>`:''}
+        ${cols(lst)}${i===3?sig:''}</div>${foot(i,tt('الشروط والأحكام','Terms and conditions'))}</div>`;
       return p1 + tp(ids.slice(0,half),2) + tp(ids.slice(half),3);
     });
   }
@@ -3279,33 +3339,46 @@ function renderActivity(){
       for(let fs = 13; fs >= 8.5; fs -= 0.25){ body.style.fontSize = fs+'px'; if(body.getBoundingClientRect().bottom <= ft.getBoundingClientRect().top - 9*(pg.getBoundingClientRect().width/794)) break; } });
   }
   function fit(){ const p = pagesEl(); if(!p) return; const z = Math.min(1,(window.innerWidth-16)/794); p.style.zoom = z<1 ? String(Math.round(z*1000)/1000) : ''; }
+  /* the saved contract keeps the Arabic and the English copy side by side: {ar:{f,c,at}, en:{f,c,at}} */
+  const store = () => { const d = CT.data, v = (d.ar || d.en) ? {ar:d.ar||null, en:d.en||null} : null; return fdb.doc('ownerNotes/'+CT.ref).set({contract:v},{mergeFields:['contract']}); };
   async function save(quiet){
     if(!CT) return; clearTimeout(saveTimer); saveTimer = null;
-    try{ if(!quiet) say(tt('جاري الحفظ…','Saving…')); await fdb.doc('ownerNotes/'+CT.ref).set({contract:collect()},{merge:true}); CT.dirty = false; say(tt('تم حفظ العقد ✓','Contract saved ✓')); }
+    try{ if(!quiet) say(tt('جاري الحفظ…','Saving…')); CT.data[CT.lang] = collect(); await store(); if(CT) CT.dirty = false; say(tt('تم حفظ العقد ✓','Contract saved ✓')); }
     catch(e){ console.warn(e); say(tt('تعذر الحفظ. تحققي من الاتصال.','Could not save. Check your connection.')); }
   }
-  let fitTimer = null;
   const touch = () => { if(!CT) return; clearTimeout(fitTimer); fitTimer = setTimeout(()=>fitPages(),400); CT.dirty = true; say(tt('تعديلات غير محفوظة…','Unsaved changes…')); clearTimeout(saveTimer); saveTimer = setTimeout(()=>save(true),1500); };
+  function show(L,carry){
+    CT.lang = L; pagesEl().innerHTML = build(CT.r,L);
+    if(CT.data[L]) apply(CT.data[L]);
+    else if(carry) apply({f:Object.fromEntries(SAME.filter(k=>k in carry.f).map(k=>[k,carry.f[k]])), c:carry.c});   // first time in this language: keep the numbers, names and ticks she already set
+    $('#ct-ar').setAttribute('aria-pressed', L==='ar'); $('#ct-en').setAttribute('aria-pressed', L==='en');
+    fit(); fitPages(); try{ document.fonts.ready.then(()=>{ if(CT) fitPages(); }); }catch(e){}
+  }
+  async function setLang(L){
+    if(!CT || CT.lang===L) return; clearTimeout(saveTimer);
+    const cur = collect(); if(CT.dirty || CT.data[CT.lang]){ CT.data[CT.lang] = cur; if(CT.dirty){ try{ await store(); CT.dirty = false; }catch(e){ console.warn(e); } } }
+    if(!CT) return; show(L,cur);
+    say(CT.data[L] ? tt('هذه النسخة المحفوظة.','This is the saved copy.') : L==='en' ? tt('النسخة الإنجليزية معبّأة من الطلب.','The English copy is filled from the order.') : tt('النسخة العربية معبّأة من الطلب.','The Arabic copy is filled from the order.'));
+  }
 
   async function open(r){
     if(!r) return;
     if(!beigeLogo) beigeLogo = await tint(IMG.logo,'#F3ECDF');
-    CT = {ref:r.id||r.ref, r, dirty:false};
+    CT = {ref:r.id||r.ref, r, dirty:false, lang:'ar', data:norm(r.contract)};
     $('#ct-h').textContent = tt('عقد الطلب','Order contract')+' '+r.ref;
     $('#ct-pdf').textContent = tt('تنزيل PDF','Download PDF'); $('#ct-print').textContent = tt('طباعة / حفظ PDF','Print / save as PDF'); $('#ct-save').textContent = tt('حفظ','Save');
     $('#ct-reset').textContent = tt('إعادة التعبئة من الطلب','Refill from the order'); $('#ct-x').textContent = tt('إغلاق','Close');
-    $('#ct-tip').textContent = tt('اضغطي على أي نص أو خانة في العقد لتعديلها، وعلى المربعات لتحديدها. تعديلاتك تُحفظ تلقائياً عندك فقط ولا يراها العميل.','Tap any text or field in the contract to edit it, and tap the boxes to tick them. Your edits save automatically, for you only. The client does not see them.');
-    pagesEl().innerHTML = build(r); apply(r.contract); say(r.contract ? tt('هذا العقد المحفوظ.','This is the saved contract.') : '');
+    $('#ct-tip').textContent = tt('اختاري نسخة العقد: العربية أو English. اضغطي على أي نص أو خانة لتعديلها، وعلى المربعات لتحديدها. تعديلاتك تُحفظ تلقائياً عندك فقط ولا يراها العميل.','Choose the copy of the contract: العربية or English. Tap any text or field to edit it, and tap the boxes to tick them. Your edits save automatically, for you only. The client does not see them.');
+    show(!CT.data.ar && CT.data.en ? 'en' : 'ar'); say(CT.data[CT.lang] ? tt('هذا العقد المحفوظ.','This is the saved contract.') : '');
     $('#contract-modal').hidden = false; $('#contract-modal').scrollTop = 0; fit(); fitPages();
-    try{ document.fonts.ready.then(()=>{ if(CT) fitPages(); }); }catch(e){}
   }
-  function close(){ if(!CT) return; if(CT.dirty) save(true); CT = null; $('#contract-modal').hidden = true; pagesEl().innerHTML = ''; }
+  function close(){ if(!CT) return; if(CT.dirty){ CT.data[CT.lang] = collect(); store().catch(e=>console.warn(e)); } clearTimeout(saveTimer); CT = null; $('#contract-modal').hidden = true; pagesEl().innerHTML = ''; }
 
   async function makePdf(){
     if(!window.jspdf || !window.html2canvas) throw new Error('pdf libs missing');
     try{ await document.fonts.ready; }catch(e){}
     const host = document.createElement('div'); host.style.cssText = 'position:fixed;left:-10000px;top:0;width:794px';
-    host.innerHTML = `<div class="ct-cap" dir="rtl" lang="ar">${pagesEl().innerHTML}</div>`; $$('[contenteditable]',host).forEach(el=>el.removeAttribute('contenteditable'));
+    host.innerHTML = `<div class="ct-cap">${pagesEl().innerHTML}</div>`; $$('[contenteditable]',host).forEach(el=>el.removeAttribute('contenteditable'));
     document.body.appendChild(host); fitPages(host);
     try{
       const pdf = new window.jspdf.jsPDF({unit:'pt',format:'a4',compress:true}), PW = pdf.internal.pageSize.getWidth(), PH = pdf.internal.pageSize.getHeight();
@@ -3337,15 +3410,16 @@ function renderActivity(){
     const box = ev.target.closest('[data-c]'); if(box){ setBox(box,!box.classList.contains('on')); touch(); return; }
     const id = ev.target.id; if(!CT) return;
     if(id==='ct-x'){ close(); }
+    else if(id==='ct-ar' || id==='ct-en'){ setLang(id==='ct-en' ? 'en' : 'ar'); }
     else if(id==='ct-save'){ save(); }
     else if(id==='ct-reset'){
-      if(!(await confirmDialog(tt('إعادة تعبئة العقد','Refill the contract'), tt('سيُمسح كل ما عدّلتِه في هذا العقد ويُعاد تعبئته من بيانات الطلب. هل أنتِ متأكدة؟','Everything you edited in this contract will be cleared and it will be filled again from the order. Are you sure?'), tt('نعم، أعيدي التعبئة','Yes, refill it'), tt('لا','No')))) return;
-      if(!CT) return; clearTimeout(saveTimer); pagesEl().innerHTML = build(CT.r); fitPages(); CT.dirty = false;
-      try{ await fdb.doc('ownerNotes/'+CT.ref).set({contract:null},{merge:true}); say(tt('تمت إعادة التعبئة من الطلب.','Refilled from the order.')); }catch(e){ console.warn(e); }
+      if(!(await confirmDialog(tt('إعادة تعبئة العقد','Refill the contract'), tt('سيُمسح كل ما عدّلتِه في هذه النسخة من العقد ويُعاد تعبئتها من بيانات الطلب. هل أنتِ متأكدة؟','Everything you edited in this copy of the contract will be cleared and it will be filled again from the order. Are you sure?'), tt('نعم، أعيدي التعبئة','Yes, refill it'), tt('لا','No')))) return;
+      if(!CT) return; clearTimeout(saveTimer); CT.data[CT.lang] = null; CT.dirty = false; show(CT.lang);
+      try{ await store(); say(tt('تمت إعادة التعبئة من الطلب.','Refilled from the order.')); }catch(e){ console.warn(e); }
     }
     else if(id==='ct-pdf'){
       const b = ev.target; b.disabled = true; say(tt('نجهز ملف PDF…','Preparing the PDF…'));
-      try{ await save(true); const blob = await makePdf(); await savePdf(blob,`JONALUX-contract-${CT ? CT.r.ref : ''}.pdf`); say(tt('الملف جاهز للحفظ ✓','The PDF is ready to save ✓')); }
+      try{ await save(true); const blob = await makePdf(); await savePdf(blob,`JONALUX-contract-${CT ? CT.r.ref+(CT.lang==='en'?'-EN':'') : ''}.pdf`); say(tt('الملف جاهز للحفظ ✓','The PDF is ready to save ✓')); }
       catch(e){ console.warn(e); say(tt('تعذر إنشاء PDF هنا. استخدمي «طباعة / حفظ PDF».','The PDF could not be created here. Use “Print / save as PDF”.')); }
       b.disabled = false;
     }
